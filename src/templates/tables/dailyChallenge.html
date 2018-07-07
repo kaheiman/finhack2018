@@ -1,0 +1,397 @@
+<style>
+    .md-datepicker-calendar-pane {
+        z-index: 1151
+    }
+
+    .md-autocomplete-suggestions-container {
+        z-index: 100000 !important;
+        /* any number of choice > 1050*/
+    }
+
+    .md-backdrop.md-select-backdrop {
+        z-index: 1003;
+    }
+
+    .md-select-menu-container {
+        z-index: 99999 !important;
+    }
+
+    .label.ng-binding {
+        color: rgba(0, 0, 0, .54) !important;
+        font-size: 100% !important;
+    }
+
+    .md-toolbar-tools>input {
+        width: 100%;
+        margin: 0;
+        border: none;
+        color: rgba(0, 0, 0, 0.87);
+    }
+</style>
+<div class="content">
+    <md-card>
+        <md-toolbar class="md-table-toolbar md-default" ng-show="!filter.show">
+            <div class="md-toolbar-tools">
+                <span>Daily Challenge</span>
+                <div flex></div>
+                <md-button class="md-icon-button" ng-click="createDailyChallengeDialog()">
+                    <md-icon>file_upload</md-icon>
+                </md-button>
+                <md-button class="md-icon-button" ng-click="filter.show = true">
+                    <md-icon>search</md-icon>
+                </md-button>
+                <md-button class="md-icon-button" ui-sref="dailyChallenge_create">
+                    <md-icon>add_box</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-toolbar class="md-table-toolbar md-default" ng-show="filter.show">
+            <div class="md-toolbar-tools">
+                <md-icon class="material-icons">search</md-icon>
+                <input flex="" ng-model="search.$" ng-model-options="filter.options" placeholder="Search">
+                <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="removeFilter()">
+                    <md-icon class="material-icons">close</md-icon>
+                </button>
+            </div>
+        </md-toolbar>
+        <md-table-container>
+            <table md-table>
+                <thead md-head md-order="query.order">
+                    <tr md-row class="md-row">
+                        <th md-column md-order-by="id">Id</th>
+                        <th md-column md-order-by="title">Title</th>
+                        <th md-column md-order-by="daily_challenge_quiz_title">Quiz Title</th>
+                        <th md-column md-order-by="time_stamp">Publish Date</th>
+                        <th md-column md-order-by="knowledge_id">Knowledge Id</th>
+                        <th md-column md-order-by="luxury_culture_id">Luxury Culture Id</th>
+                        <th md-column md-order-by="daily_challenge_quiz_id">Daily Challenge Quiz Id</th>
+                        <th md-column>Action</th>
+                    </tr>
+                    <tr md-row class="md-row">
+                        <th md-column>
+                            <md-input-container md-no-float>
+                                <input ng-model="search.id" placeholder="All">
+                            </md-input-container>
+                        </th>
+                        <th md-column>
+                            <md-input-container md-no-float>
+                                <input ng-model="search.daily_challenge_quiz_title" placeholder="All">
+                            </md-input-container>
+                        </th>
+                        <th md-column>
+                            <md-input-container md-no-float>
+                                <input ng-model="search.title" placeholder="All">
+                            </md-input-container>
+                        </th>
+                        <th md-column>
+                            <md-input-container md-no-float>
+                                <input ng-model="search.time_stamp" placeholder="All">
+                            </md-input-container>
+                        </th>
+                        <th md-column>
+                            <md-input-container md-no-float>
+                                <input ng-model="search.knowledge_id" placeholder="All">
+                            </md-input-container>
+                        </th>
+                        <th md-column>
+                            <md-input-container md-no-float>
+                                <input ng-model="search.luxury_culture_id" placeholder="All">
+                            </md-input-container>
+                        </th>
+                        <th md-column>
+                            <md-input-container md-no-float>
+                                <input ng-model="search.daily_challenge_quiz_id" placeholder="All">
+                            </md-input-container>
+                        </th>
+                        <th md-column></th>
+                    </tr>
+                </thead>
+                <tbody md-body>
+                    <tr md-row ng-repeat="item in dailyChallengeGroup['display'] | orderBy: '-' + query.order | filter:search | limitTo: query.limit: (query.page - 1) * query.limit ">
+                        <td md-cell>{{item.id}}</td>
+                        <td md-cell>{{item.title}}</td>
+                        <td md-cell>{{item.daily_challenge_quiz_title}}</td>
+                        <td md-cell>{{item.time_stamp|date:'yyyy-MM-dd'}}</td>
+                        <td md-cell>{{item.knowledge_id}} - {{item.knowledge_title}}</td>
+                        <td md-cell>{{item.luxury_culture_id}} - {{item.luxury_culture_title}}</td>
+                        <td md-cell>
+                            {{item.daily_challenge_quiz_id}}
+                            <md-button class="md-icon-button" ng-click="editDailyChallengeQuiz(item.daily_challenge_quiz_id)">
+                                <md-icon>edit</md-icon>
+                            </md-button>
+                        </td>
+                        <td md-cell>
+                            <md-button class="md-icon-button" ng-click="clickable('EDIT', item)" data-toggle="modal" data-target="#myModal">
+                                <md-icon>edit</md-icon>
+                            </md-button>
+                            <md-button ng-if="deleteBtn" class="md-icon-button" ng-click="clickable('DELETE', item)">
+                                <md-icon>delete</md-icon>
+                            </md-button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+        <md-table-pagination md-limit="query.limit" md-limit-options="[15, 20, 25]" md-page="query.page" md-total="{{dailyChallengeGroup['display'].length}}"
+            md-on-paginate="" md-page-select></md-table-pagination>
+    </md-card>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div layout-gt-sm="row">
+                        <md-input-container class="md-block" flex-gt-sm>
+                            <label>Title Name</label>
+                            <input md-maxlength="100" required name="name" ng-model="editableItem.title" />
+                        </md-input-container>
+                    </div>
+                    <div layout-gt-sm="row">
+                        <md-input-container class="md-block" flex-gt-sm>
+                            <label>Enter date</label>
+                            <md-datepicker ng-model="editableItem.publish_date"></md-datepicker>
+                        </md-input-container>
+                    </div>
+                    <div layout-gt-sm="row">
+                        <md-switch ng-init="alterQuiz = false" ng-model="alterQuiz" aria-label="Switch 1">
+                            <label>Alert Quiz Id: {{editableItem.quizID}}</label>
+                        </md-switch>
+                        <md-chips ng-model="languageGroup.quiz" md-autocomplete-snap md-transform-chip="transformChip($chip) " md-require-match="true"
+                            ng-if="alterQuiz">
+                            <md-autocomplete md-selected-item="selectedItem.quiz" md-search-text="searchText.quiz" md-items="item in querySearch(searchText.quiz, 'quiz')"
+                                md-item-text="item" placeholder="Search by id / title" ng-show="languageGroup.quiz.length == 0">
+                                <span md-highlight-text="searchText.quiz">({{item.id}}){{item.question}}</span>
+                            </md-autocomplete>
+                            <md-chip-template>
+                                <span>
+                                    <strong>{{$chip.id}}</strong>
+                                    <em>({{$chip.question}})</em>
+                                </span>
+                            </md-chip-template>
+                        </md-chips>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <md-tabs md-dynamic-height md-border-bottom>
+                        <md-tab label="{{obj.translation}}" ng-repeat="obj in editableItem.group">
+                            <md-content class="md-padding" layout="column">
+
+                                <label class="control-label" ng-if="obj.translation != 'English'">Tips of The Day Translation</label>
+                                <md-input-container md-no-float class="md-block" ng-repeat="lang in obj.language" ng-if="obj.translation != 'English'">
+                                    <input ng-model="obj.translationTitle[$index]" placeholder="{{lang}}">
+                                </md-input-container>
+                                <md-switch ng-init="alter[obj.translation] = false" ng-model="alert" aria-label="Switch 1">
+                                    <label>Alert Luxury Culture Id: </label>{{obj.luxury_culture_id}}
+                                </md-switch>
+                                <md-input-container style="margin-right: 50px;" ng-click="getAutoComplete()" ng-if="alert">
+                                    <label>Type</label>
+                                    <md-select ng-model="languageGroup.type[obj.translation]">
+                                        <md-option ng-repeat="type in tipsType" value="{{type}}">{{type}}</md-option>
+                                    </md-select>
+                                </md-input-container>
+                                <md-chips ng-init="languageGroup.typeId[obj.translation] = []" ng-model="languageGroup.typeId[obj.translation]" md-autocomplete-snap
+                                    md-transform-chip="transformChip($chip)" md-require-match="true" ng-if="languageGroup.type[obj.translation] == 'Luxury Culture' &&  alert">
+                                    <md-autocomplete md-selected-item="selectedItem.luxuryCulture[obj.translation]" md-search-text="searchText.luxuryCulture[obj.translation]"
+                                        md-items="item in querySearch(searchText.luxuryCulture[obj.translation], 'luxury')" md-item-text="item"
+                                        placeholder="Search for id / keywords" ng-show="languageGroup.typeId[obj.translation].length == 0">
+                                        <span md-highlight-text="searchText.luxuryCulture[obj.translation]">({{item.id}}){{item.title}}</span>
+                                    </md-autocomplete>
+                                    <md-chip-template>
+                                        <span>
+                                            <strong>{{$chip.id}}</strong>
+                                            <em>({{$chip.title}})</em>
+                                        </span>
+                                    </md-chip-template>
+                                </md-chips>
+                            </md-content>
+                            <md-content class="md-padding" layout="column">
+                                <md-input-container>
+                                    <label>Stream Group</label>
+                                    <md-select ng-model="obj.stream_group">
+                                        <md-option value="{{topping.name}}" ng-repeat="topping in streamGroups.availableOptions">{{topping.name}}</md-option>
+                                    </md-select>
+                                </md-input-container>
+                            </md-content>
+
+                            <md-content class="md-padding" layout="column">
+                                <h2 class="md-title">Product Group</h2>
+                                <md-chips ng-model="obj.product_group" md-autocomplete-snap md-transform-chip="transformChip($chip)" md-require-match="true">
+                                    <md-autocomplete md-selected-item="selectedItem.productGroups[obj.translation]" md-search-text="searchText.productGroups[obj.translation]"
+                                        md-items="item in querySearch(searchText.productGroups[obj.translation], 'product')"
+                                        md-item-text="item" placeholder="Search for a product group">
+                                        <span md-highlight-text="searchText.productGroups[obj.translation]">{{item}}</span>
+                                    </md-autocomplete>
+                                    <md-chip-template>
+                                        <span>
+                                            <strong>{{$chip.name}}</strong>
+                                        </span>
+                                    </md-chip-template>
+                                </md-chips>
+                            </md-content>
+                            <md-content class="md-padding" layout="column">
+                                <h2 class="md-title">Available black list user group</h2>
+                                <md-chips ng-model="obj.black_list_user_group" md-autocomplete-snap md-transform-chip="transformChip($chip)" md-require-match="true">
+                                    <md-autocomplete md-selected-item="selectedItem.userGroupsBlackList[obj.translation]" md-search-text="searchText.userGroupsBlackList[obj.translation]"
+                                        md-items="item in querySearch(searchText.userGroupsBlackList[obj.translation], 'user')"
+                                        md-item-text="item" placeholder="Search for a user group">
+                                        <span md-highlight-text="searchText.userGroupsBlackList[obj.translation]">{{item}}</span>
+                                    </md-autocomplete>
+                                    <md-chip-template>
+                                        <span>
+                                            <strong>{{$chip.name}}</strong>
+                                        </span>
+                                    </md-chip-template>
+                                </md-chips>
+                            </md-content>
+                            <md-content class="md-padding" layout="column">
+                                <h2 class="md-title">Available white list user group</h2>
+                                <md-chips ng-model="obj.white_list_user_group" md-autocomplete-snap md-transform-chip="transformChip($chip)" md-require-match="true">
+                                    <md-autocomplete md-selected-item="selectedItem.userGroupsWhiteList[obj.translation]" md-search-text="searchText.userGroupsWhiteList[obj.translation]"
+                                        md-items="item in querySearch(searchText.userGroupsWhiteList[obj.translation], 'user')"
+                                        md-item-text="item" placeholder="Search for a user group">
+                                        <span md-highlight-text="searchText.userGroupsWhiteList[obj.translation]">{{item}}</span>
+                                    </md-autocomplete>
+                                    <md-chip-template>
+                                        <span>
+                                            <strong>{{$chip.name}}</strong>
+                                        </span>
+                                    </md-chip-template>
+                                </md-chips>
+                            </md-content>
+                        </md-tab>
+                    </md-tabs>
+                </div>
+                <div class="modal-footer">
+                    <button ng-if="!activateUpdate" type="button" class="btn btn-default btn-simple" data-dismiss="modal">Close</button>
+                    <button type="button" ng-if="!activateUpdate" class="btn btn-success btn-fill" ng-click="clickable('EDIT-SAVE', editableItem.publish_date)">Save changes
+                    </button>
+                    <md-content md-theme="docs-dark" layout-padding ng-if="activateUpdate">
+                        <div layout="row" layout-sm="column" layout-align="space-around">
+                            <md-progress-circular md-diameter="35"></md-progress-circular>
+                        </div>
+                    </md-content>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="edit.daily.html">
+    <md-dialog aria-label="Mango (Fruit)" flex="70%">
+        <form ng-cloak>
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>Edit Daily Challenge Quiz</h2>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+
+            <md-dialog-content>
+                <div class="md-dialog-content" class="md-padding" layout-xs="column" layout="row">
+                    <div flex-xs flex-gt-xs="40" layout="column">
+                        <md-card>
+                            <md-card-title>
+                                <md-card-title-text>
+                                    <span class="md-headline">Quiz Question</span>
+                                </md-card-title-text>
+                            </md-card-title>
+                            <md-card-content>
+                                <md-input-container class="md-block" flex-gt-sm>
+                                    <label>Quiz Question</label>
+                                    <input ng-model="dailyChallengeQuiz.question">
+                                </md-input-container>
+                                <h4>Daily Challenge Quiz Translation</h4>
+                                <md-input-container md-no-float class="md-block" ng-repeat="option in dailyChallengeQuiz.translations_quiz">
+                                    <label>{{option.language}}</label>
+                                    <input ng-model="option.question">
+                                </md-input-container>
+                            </md-card-content>
+                        </md-card>
+                    </div>
+                    <div flex-xs flex-gt-xs="60" layout="column">
+                        <md-card>
+                            <md-card-title>
+                                <md-card-title-text>
+                                    <span class="md-headline">Quiz Answer</span>
+                                </md-card-title-text>
+                            </md-card-title>
+                            <md-card-content>
+                                <md-tabs md-dynamic-height md-border-bottom>
+                                    <md-tab label="{{questionType[$index]}}" ng-repeat="answer in dailyChallengeQuiz.answers">
+                                        <md-content class="md-padding">
+                                            <div class="row">
+                                                <div class="col-md-10 col-md-offset-1">
+                                                    <md-checkbox ng-model="answer.correct">
+                                                        <b>Correct</b>
+                                                    </md-checkbox>
+                                                    <br>
+                                                    <br>
+                                                    <label class="control-label">Daily Challenge Quiz Answer</label>
+                                                    <md-input-container md-no-float class="md-block">
+                                                        <input ng-model="answer.answer" placeholder="English Answer">
+                                                    </md-input-container>
+                                                    <label class="control-label">Daily Challenge Quiz Answer Translation</label>
+                                                    <br>
+                                                    <br>
+                                                    <md-input-container md-no-float class="md-block" ng-repeat="option in answer.translations_answer">
+                                                        <label>{{option.language}}</label>
+                                                        <input ng-model="option.answer">
+                                                    </md-input-container>
+                                                </div>
+                                            </div>
+                                        </md-content>
+                                    </md-tab>
+                                </md-tabs>
+                            </md-card-content>
+                        </md-card>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions layout="row">
+                <span flex></span>
+                <md-button class="md-raised" ng-click="closeDialog()">
+                    Cancel
+                </md-button>
+                <md-button class="md-raised md-primary" ng-click="saveEdit()">
+                    Save Change
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+<script type="text/ng-template" id="create.DailyChallengeDialog.html">
+    <md-dialog aria-label="Mango (Fruit)" flex="70%">
+        <form ng-cloak>
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>Daily Challenge Upload</h2>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+            <md-dialog-content>
+                <div class="md-dialog-content" class="md-padding" style="text-align: center" layout-xs="column">
+                    <input class="center ng-hide" import-sheet-js="" id="input-file-id" opts="xlsData" immultiple="false" type="file" />
+                    <label for="input-file-id" class="md-button md-raised md-primary">Choose XLS Files</label>
+                    <div id="grid1" ui-grid="xlsData" ui-grid-selection ui-grid-exporter class="grid"></div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions layout="row">
+                <md-button class="md-raised "ng-href="https://s3-ap-southeast-1.amazonaws.com/xls-upload-sample/Daily_Challenge_XLS_Upload_SAMPLE.xlsx">
+                    Sample
+                </md-button>
+                <md-button class="md-raised " ng-href="https://s3-ap-southeast-1.amazonaws.com/xls-upload-sample/Daily_Challenge_XLS_Upload_Format.xlsx">
+                    Format
+                </md-button>
+                <span flex></span>
+                <md-button class="md-raised " ng-click="closeDialog()">
+                    Cancel
+                </md-button>
+                <md-button class="md-raised md-primary" ng-click="submit()">
+                    Submit
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>

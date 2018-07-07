@@ -1,0 +1,434 @@
+<style>
+    .md-datepicker-calendar-pane {
+        z-index: 1151
+    }
+
+    .md-autocomplete-suggestions-container {
+        z-index: 100000 !important;
+        /* any number of choice > 1050*/
+    }
+
+    .md-backdrop.md-select-backdrop {
+        z-index: 1003;
+    }
+
+    .md-select-menu-container {
+        z-index: 99999 !important;
+    }
+
+    .label.ng-binding {
+        color: rgba(0, 0, 0, .54) !important;
+        font-size: 100% !important;
+    }
+
+    .md-toolbar-tools>input {
+        width: 100%;
+        margin: 0;
+        border: none;
+        color: rgba(0, 0, 0, 0.87);
+    }
+
+    .languageBtn {
+        min-width: 0px;
+    }
+</style>
+<div class="content">
+    <md-card>
+        <md-toolbar class="md-table-toolbar md-default" ng-show="!filter.show">
+            <div class="md-toolbar-tools">
+                <span>Tips Of The Day</span>
+                <div flex></div>
+                <md-button class="md-icon-button" ng-click="createTipsXlsDialog()">
+                    <md-icon>file_upload</md-icon>
+                </md-button>
+                <md-button class="md-icon-button" ng-click="filter.show = true">
+                    <md-icon>search</md-icon>
+                </md-button>
+                <md-button class="md-icon-button" ng-click="createTipsDialog()">
+                    <md-icon>add_box</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-toolbar class="md-table-toolbar md-default" ng-show="filter.show">
+            <div class="md-toolbar-tools">
+                <md-icon class="material-icons">search</md-icon>
+                <input flex="" ng-model="search.$" ng-model-options="filter.options" placeholder="Search">
+                <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="removeFilter()">
+                    <md-icon class="material-icons">close</md-icon>
+                </button>
+            </div>
+        </md-toolbar>
+        <md-table-container>
+            <table md-table>
+                <thead md-head md-order="query.order">
+                    <tr md-row class="md-row">
+                        <th md-column md-order-by="id">
+                            <span>Id</span>
+                        </th>
+                        <th md-column md-order-by="title">
+                            <span>Title</span>
+                        </th>
+                        <th md-column md-order-by="luxury_culture_id">
+                            <span>luxury Culture Id</span>
+                        </th>
+                        <th md-column md-order-by="knowledge_id">
+                            <span>Knowledge Id</span>
+                        </th>
+                        <th md-column md-order-by="time_stamp">
+                            <span>Publish Date</span>
+                        </th>
+                        <th md-column>
+                            <span>Action</span>
+                        </th>
+                    </tr>
+                    <tr md-row class="md-row">
+                        <th md-column>
+                            <md-input-container md-no-float>
+                                <input ng-model="search.id" placeholder="All">
+                            </md-input-container>
+                        </th>
+                        <th md-column>
+                            <md-input-container md-no-float>
+                                <input ng-model="search.title" placeholder="All">
+                            </md-input-container>
+                        </th>
+                        <th md-column>
+                            <md-input-container md-no-float>
+                                <input ng-model="search.luxury_culture_id" placeholder="All">
+                            </md-input-container>
+                        </th>
+                        <th md-column>
+                            <md-input-container md-no-float>
+                                <input ng-model="search.knowledge_id" placeholder="All">
+                            </md-input-container>
+                        </th>
+                        <th md-column>
+                            <md-input-container md-no-float>
+                                <input ng-model="search.time_stamp" placeholder="All">
+                            </md-input-container>
+                        </th>
+                        <th md-column></th>
+                    </tr>
+                </thead>
+                <tbody md-body>
+                    <tr md-row ng-repeat="item in tipsOfTheDay  | orderBy: '-' + query.order | filter:search | limitTo: query.limit: (query.page - 1) * query.limit ">
+                        <td md-cell>{{item.id}}</td>
+                        <td md-cell>{{item.title}}</td>
+                        <td md-cell>{{item.luxury_culture_id}} - {{item.luxury_culture_title}} </td>
+                        <td md-cell>{{item.knowledge_id}} - {{item.knowledge_title}}</td>
+                        <td md-cell>{{item.time_stamp|date:'yyyy-MM-dd'}}</td>
+                        <td md-cell style="width: 424px;">
+                            <md-button class="md-raised languageBtn" ng-click="translate(item.id, 'CN')" ng-if="permissions.group.indexOf('CN') != -1 || permissions.superUser == true">CN</md-button>
+                            <md-button class="md-raised languageBtn" ng-click="translate(item.id, 'FR')" ng-if="permissions.group.indexOf('FR') != -1 || permissions.superUser == true">FR</md-button>
+                            <md-button class="md-raised languageBtn" ng-click="translate(item.id, 'JP')" ng-if="permissions.group.indexOf('JP') != -1 || permissions.superUser == true">JP</md-button>
+                            <md-button class="md-raised languageBtn" ng-click="translate(item.id, 'KR')" ng-if="permissions.group.indexOf('KR') != -1 || permissions.superUser == true">KR</md-button>
+                            <md-button class="md-raised languageBtn" ng-click="translate(item.id, 'TC')" ng-if="permissions.group.indexOf('TC') != -1 || permissions.superUser == true">TC</md-button>
+                            <md-button class="md-icon-button" ng-click="editTipsDialog(item.id)" ng-if="permissions.superUser == true">
+                                <md-icon>edit</md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button" ng-click="remove(item.id)" ng-if="permissions.superUser == true">
+                                <md-icon>delete</md-icon>
+                            </md-button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+        <md-table-pagination md-limit="query.limit" md-limit-options="[15, 20, 25]" md-page="query.page" md-total="{{tipsOfTheDay.length}}"
+            md-on-paginate="" md-page-select></md-table-pagination>
+    </md-card>
+</div>
+<script type="text/ng-template" id="create.tipsOfTheDay.html">
+    <md-dialog aria-label="Mango (Fruit)" flex="70">
+        <form ng-cloak>
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>Tips Of The Day XLS Upload</h2>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+            <md-dialog-content>
+                <div class="md-dialog-content" class="md-padding" style="text-align: center" layout-xs="column">
+                    <input class="center ng-hide" import-sheet-js="" id="input-file-id" opts="xlsData" immultiple="false" type="file" />
+                    <label for="input-file-id" class="md-button md-raised md-primary">Choose XLS Files</label>
+                    <div id="grid1" ui-grid="xlsData" ui-grid-selection ui-grid-exporter class="grid"></div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions layout="row">
+                <md-button class="md-raised " ng-href="https://s3-ap-southeast-1.amazonaws.com/xls-upload-sample/Tips_XLS_Upolad_SAMPLE.xlsx">
+                    Sample
+                </md-button>
+                <md-button class="md-raised " ng-href="https://s3-ap-southeast-1.amazonaws.com/xls-upload-sample/Tips_XLS_Upolad_Format.xlsx">
+                    Format
+                </md-button>
+                <span flex></span>
+                <md-button class="md-raised " ng-click="closeDialog()">
+                    Cancel
+                </md-button>
+                <md-button class="md-raised md-primary" ng-click="submit()">
+                    Submit
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+<script type="text/ng-template" id="create.tipsOfTheDay.one.html">
+    <md-dialog aria-label="Mango (Fruit)" flex="40">
+        <form name="tipsForm">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>Tips Of The Day</h2>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+            <md-dialog-content>
+                <div class="md-dialog-content" class="md-padding">
+                    <md-input-container class="md-block" flex-gt-xs>
+                        <label>Tips of The Day Title</label>
+                        <input required ng-model="newTipsOfTheDay.title" name="title">
+                        <div ng-messages="tipsForm.title.$error">
+                            <div ng-message="required">This is required.</div>
+                        </div>
+                    </md-input-container>
+                    <div layout-gt-xs="row">
+                        <md-input-container class="md-block" flex-gt-xs>
+                            <label>Product Group</label>
+                            <md-select required ng-model="newTipsOfTheDay.productGroups" multiple name="productGroups">
+                                <md-optgroup label="Product Group">
+                                    <md-option ng-value="pg.id" ng-repeat="pg in productGroups">{{pg.name}}</md-option>
+                                </md-optgroup>
+                            </md-select>
+                            <div ng-messages="tipsForm.productGroups.$error">
+                                <div ng-message="required">This is required.</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Publish Date</label>
+                            <md-datepicker required ng-model="newTipsOfTheDay.publishDate" name="publishDate"></md-datepicker>
+                            <div ng-messages="tipsForm.publishDate.$error">
+                                <div ng-message="required">This is required.</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                    <div layout-gt-xs="row">
+                        <md-input-container flex="50">
+                            <label>Stream group</label>
+                            <md-select required ng-model="newTipsOfTheDay.streamGroups " name="streamGroups">
+                                <md-optgroup label="Stream group">
+                                    <md-option ng-value="sg.id" ng-repeat="sg in streamGroups">{{sg.name}}</md-option>
+                                </md-optgroup>
+                            </md-select>
+                        </md-input-container>
+                        <md-switch ng-model="type" aria-label="Switch1" ng-change="getAutoComplete(type)">
+                            {{ newTipsOfTheDay.idType }}
+                        </md-switch>
+                        <md-chips ng-show="newTipsOfTheDay.idType == 'LC'" flex ng-model="selectIdOfLC" md-autocomplete-snap md-transform-chip="transformChip($chip)"
+                            md-require-match="true">
+                            <md-autocomplete md-selected-item="selectedItem" md-search-text="searchText" md-items="item in querySearch(searchText, type)"
+                                md-item-text="item" placeholder="Search" ng-show="selectIdOfLC.length == 0">
+                                <span md-highlight-text="searchText">[{{item.id}}] {{item.title}}</span>
+                            </md-autocomplete>
+                            <md-chip-template>
+                                <span>
+                                    <strong>[{{$chip.id}}]</strong>
+                                    <em>{{$chip.title}}</em>
+                                </span>
+                            </md-chip-template>
+                        </md-chips>
+                        <md-chips ng-show="newTipsOfTheDay.idType == 'K'" flex ng-model="selectIdOfK" md-autocomplete-snap md-transform-chip="transformChip($chip)"
+                            md-require-match="true">
+                            <md-autocomplete md-selected-item="selectedItem" md-search-text="searchText" md-items="item in querySearch(searchText, type)"
+                                md-item-text="item" placeholder="Search" ng-show="selectIdOfK.length == 0">
+                                <span md-highlight-text="searchText">[{{item.id}}] {{item.title}}</span>
+                            </md-autocomplete>
+                            <md-chip-template>
+                                <span>
+                                    <strong>[{{$chip.id}}]</strong>
+                                    <em>{{$chip.title}}</em>
+                                </span>
+                            </md-chip-template>
+                        </md-chips>
+                    </div>
+                    <div layout-gt-xs="row">
+                        <md-input-container flex>
+                            <label>Available black list user group</label>
+                            <md-select ng-model="newTipsOfTheDay.userGroups.black" multiple name="black">
+                                <md-optgroup label="User Group">
+                                    <md-option ng-value="ug.id" ng-repeat="ug in userGroups">{{ug.name}}</md-option>
+                                </md-optgroup>
+                            </md-select>
+                        </md-input-container>
+                        <md-input-container flex>
+                            <label>Available white list user group</label>
+                            <md-select ng-model="newTipsOfTheDay.userGroups.white" multiple name="white">
+                                <md-optgroup label="User Group">
+                                    <md-option ng-value="ug.id" ng-repeat="ug in userGroups">{{ug.name}}</md-option>
+                                </md-optgroup>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+                <md-dialog-actions layout="row">
+                    <span flex></span>
+                    <md-button class="md-raised" ng-click="closeDialog()">
+                        Cancel
+                    </md-button>
+                    <md-button class="md-raised md-primary" ng-click="submit(tipsForm)">
+                        Submit
+                    </md-button>
+                </md-dialog-actions>
+            </md-dialog-content>
+        </form>
+    </md-dialog>
+</script>
+<script type="text/ng-template" id="translate.tipsOfTheDay.html">
+    <md-dialog aria-label="Mango (Fruit)" flex="70">
+        <form ng-cloak style="height:100%;">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>Translate Tips Of the Day [{{language}}]</h2>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+            <md-dialog-content style="height:100%;">
+                <div class="md-dialog-content" class="md-padding" layout-xs="column" layout="row">
+                    <div flex-xs flex-gt-xs="50" layout="column">
+                        <md-card-content>
+                            <md-input-container class="md-block" flex-gt-sm>
+                                <label>Tips Of The Day Title</label>
+                                <input ng-model="tipsOfTheDay.title" name="title" ng-disabled="true">
+                                <div ng-messages="lcForm.title.$error">
+                                    <div ng-message="required">This is required.</div>
+                                </div>
+                            </md-input-container>
+                        </md-card-content>
+                    </div>
+                    <div flex-xs flex-gt-xs="50" layout="column">
+                        <md-card-content>
+                            <md-input-container class="md-block" flex-gt-sm>
+                                <label>Tips Of The Day Title</label>
+                                <input required ng-model="translate.title" name="title">
+                                <div ng-messages="lcForm.title.$error">
+                                    <div ng-message="required">This is required.</div>
+                                </div>
+                            </md-input-container>
+                        </md-card-content>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions layout="row">
+                <span flex></span>
+                <md-button class="md-raised" ng-click="closeDialog()">
+                    Cancel
+                </md-button>
+                <md-button class="md-raised md-primary" class="md-raised md-primary" ng-click="saveEdit()">
+                    Save Translate
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+<script type="text/ng-template" id="edit.tipsOfTheDay.html">
+    <md-dialog aria-label="Mango (Fruit)" flex="50">
+        <form name="tipsForm">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>Tips Of The Day</h2>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+            <md-dialog-content>
+                <div class="md-dialog-content" class="md-padding">
+                    <md-input-container class="md-block" flex-gt-xs>
+                        <label>Tips of The Day Title</label>
+                        <input required ng-model="tipsOfTheDay.title" name="title">
+                        <div ng-messages="tipsForm.title.$error">
+                            <div ng-message="required">This is required.</div>
+                        </div>
+                    </md-input-container>
+                    <div layout-gt-xs="row">
+                        <md-input-container class="md-block" flex-gt-xs>
+                            <label>Product Group</label>
+                            <md-select required ng-model="tipsOfTheDay.product_group" multiple name="productGroups">
+                                <md-optgroup label="Product Group">
+                                    <md-option ng-value="pg.id" ng-repeat="pg in productGroups">{{pg.name}}</md-option>
+                                </md-optgroup>
+                            </md-select>
+                            <div ng-messages="tipsForm.productGroups.$error">
+                                <div ng-message="required">This is required.</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Publish Date</label>
+                            <md-datepicker required ng-model="tipsOfTheDay.time_stamp" name="publishDate"></md-datepicker>
+                            <div ng-messages="tipsForm.publishDate.$error">
+                                <div ng-message="required">This is required.</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                    <div layout-gt-xs="row">
+                        <md-input-container flex="50">
+                            <label>Stream group</label>
+                            <md-select required ng-model="tipsOfTheDay.stream_group " name="streamGroups">
+                                <md-optgroup label="Stream group">
+                                    <md-option ng-value="sg.id" ng-repeat="sg in streamGroups">{{sg.name}}</md-option>
+                                </md-optgroup>
+                            </md-select>
+                        </md-input-container>
+                        <div flex="50">
+                            [{{ tipsOfTheDay.idType }}]
+                            <div ng-if="tipsOfTheDay.idType == 'LC'">
+                                Linked Id :{{selectIdOfLC}}
+                            </div>
+                            <div ng-if="tipsOfTheDay.idType == 'K'">
+                                Linked Id :{{selectIdOfK}}
+                            </div>
+                        </div>
+                    </div>
+                    <div layout-gt-xs="row">
+                        <md-input-container flex>
+                            <label>Available black list user group</label>
+                            <md-select ng-model="tipsOfTheDay.black_list_user_group" multiple name="black">
+                                <md-optgroup label="User Group">
+                                    <md-option ng-value="ug.id" ng-repeat="ug in userGroups">{{ug.name}}</md-option>
+                                </md-optgroup>
+                            </md-select>
+                        </md-input-container>
+                        <md-input-container flex>
+                            <label>Available white list user group</label>
+                            <md-select ng-model="tipsOfTheDay.white_list_user_group" multiple name="white">
+                                <md-optgroup label="User Group">
+                                    <md-option ng-value="ug.id" ng-repeat="ug in userGroups">{{ug.name}}</md-option>
+                                </md-optgroup>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <md-tabs md-dynamic-height md-border-bottom>
+                        <md-tab ng-repeat="t in tipsOfTheDayTranslation" label="{{t.language}}">
+                            <md-content class="md-padding">
+                                <p>
+                                    <md-input-container class="md-block" flex-gt-xs>
+                                        <label>Tips of The Day Title</label>
+                                        <input required ng-model="t.title" name="title">
+                                        <div ng-messages="tipsForm.title.$error">
+                                            <div ng-message="required">This is required.</div>
+                                        </div>
+                                    </md-input-container>
+                                </p>
+                            </md-content>
+                        </md-tab>
+                    </md-tabs>
+                </div>
+                <md-dialog-actions layout="row">
+                    <span flex></span>
+                    <md-button ng-click="closeDialog()">
+                        Cancel
+                    </md-button>
+                    <md-button class="md-raised md-primary" ng-click="submit(tipsForm)">
+                        Submit
+                    </md-button>
+                </md-dialog-actions>
+            </md-dialog-content>
+        </form>
+    </md-dialog>
+</script>

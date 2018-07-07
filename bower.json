@@ -1,0 +1,47 @@
+{
+  "name": "cms-spa",
+  "description": "ThinkItTwice CMS",
+  "main": "gulpfile.js",
+  "authors": [
+    "Marcus Man"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "thinkittwice",
+    "cms",
+    "spa",
+    "angularjs"
+  ],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "resolutions": {
+    "angular": "~1.6.5"
+  },
+  "dependencies": {
+    "angular": "~1.6.5",
+    "textAngular": "1.5.16",
+    "angular-animate": "1.6.5",
+    "angular-aria": "1.6.5",
+    "angular-bootstrap": "2.5.0",
+    "angular-file-upload": "2.5.0",
+    "angular-material-data-table": "0.10.9",
+    "angular-material": "1.1.4",
+    "angular-messages": "1.6.5",
+    "angular-ui-router": "1.0.15",
+    "angularUtils-pagination": "angular-utils-pagination#0.11.1",
+    "aws-sdk": "^2.219.1",
+    "font-awesome": "^5.0.9",
+    "js-xlsx": "^0.12.7",
+    "ng-file-upload": "^12.2.13",
+    "angular-resource": "1.6.5",
+    "angular-mocks": "^1.6.9",
+    "angular-ui-grid": "4.0.0"
+  }
+}

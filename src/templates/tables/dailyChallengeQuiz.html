@@ -1,0 +1,200 @@
+<style>
+    .md-datepicker-calendar-pane {
+        z-index: 1151
+    }
+
+    .md-autocomplete-suggestions-container {
+        z-index: 100000 !important;
+        /* any number of choice > 1050*/
+    }
+
+    .label.ng-binding {
+        color: rgba(0, 0, 0, .54) !important;
+        font-size: 100% !important;
+    }
+
+    .md-toolbar-tools>input {
+        width: 100%;
+        margin: 0;
+        border: none;
+        color: rgba(0, 0, 0, 0.87);
+    }
+</style>
+<div class="content">
+    <md-card>
+        <md-toolbar class="md-table-toolbar md-default" ng-show="!filter.show">
+            <div class="md-toolbar-tools">
+                <span>Daily Challenge Quiz</span>
+                <div flex></div>
+                <md-button class="md-icon-button" ng-click="createDailyChallengeQuizDialog()">
+                    <md-icon>file_upload</md-icon>
+                </md-button>
+                <md-button class="md-icon-button" ng-click="filter.show = true">
+                    <md-icon>search</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-toolbar class="md-table-toolbar md-default" ng-show="filter.show">
+            <div class="md-toolbar-tools">
+                <md-icon class="material-icons">search</md-icon>
+                <input flex="" ng-model="search.$" ng-model-options="filter.options" placeholder="Search">
+                <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="removeFilter()">
+                    <md-icon class="material-icons">close</md-icon>
+                </button>
+            </div>
+        </md-toolbar>
+        <md-table-container>
+            <table md-table>
+                <thead md-head md-order="query.order">
+                    <tr md-row class="md-row">
+                        <th md-column md-order-by="id">Id</th>
+                        <th md-column md-order-by="question">Question</th>
+                        <th md-column>Action</th>
+                    </tr>
+                    <tr md-row class="md-row">
+                        <th md-column>
+                            <md-input-container md-no-float>
+                                <input ng-model="search.id" placeholder="All">
+                            </md-input-container>
+                        </th>
+                        <th md-column>
+                            <md-input-container md-no-float>
+                                <input ng-model="search.question" placeholder="All">
+                            </md-input-container>
+                        </th>
+                        <th md-column></th>
+                    </tr>
+                </thead>
+                <tbody md-body>
+                    <tr md-row ng-repeat="item in quiz.quizes | orderBy: '-' + query.order | filter:search | limitTo: query.limit: (query.page - 1) * query.limit ">
+                        <td md-cell>{{item.id}}</td>
+                        <td md-cell>{{item.question}}</td>
+                        <td md-cell>
+                            <md-button class="md-icon-button" ng-click="editDailyChallengeQuizDialog(item.id)">
+                                <md-icon>edit</md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button" ng-click="deleteDailyChallengeQuiz(item.id)">
+                                <md-icon>delete</md-icon>
+                            </md-button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+        <md-table-pagination md-limit="query.limit" md-limit-options="[15, 20, 25]" md-page="query.page" md-total="{{quiz.quizes.length}}"
+            md-on-paginate="" md-page-select></md-table-pagination>
+    </md-card>
+</div>
+<script type="text/ng-template" id="create.DailyChallengeQuizDialog.html">
+    <md-dialog aria-label="Mango (Fruit)" flex="70">
+        <form ng-cloak>
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>Daily Challenge Quiz Upload</h2>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+            <md-dialog-content>
+                <div class="md-dialog-content" class="md-padding" style="text-align: center" layout-xs="column">
+                    <input class="center ng-hide" import-sheet-js="" id="input-file-id" opts="xlsData" immultiple="false" type="file" />
+                    <label for="input-file-id" class="md-button md-raised md-primary">Choose XLS Files</label>
+                    <div id="grid1" ui-grid="xlsData" ui-grid-selection ui-grid-exporter class="grid"></div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions layout="row">
+                <md-button class="md-raised" ng-href="https://s3-ap-southeast-1.amazonaws.com/xls-upload-sample/Daily_Challenge_Quiz_Upload_Sample.xlsx">
+                    Sample
+                </md-button>
+                <span flex></span>
+                <md-button class="md-raised" ng-click="closeDialog()">
+                    Cancel
+                </md-button>
+                <md-button class="md-raised md-primary" ng-click="submit()">
+                    Submit
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+<script type="text/ng-template" id="edit.dailyChallengeQuiz.html">
+    <md-dialog aria-label="Mango (Fruit)" flex="70">
+        <form ng-cloak>
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>Edit Daily Challenge Quiz</h2>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+            <md-dialog-content>
+                <div class="md-dialog-content" class="md-padding" layout-xs="column" layout="row">
+                    <div flex-xs flex-gt-xs="40" layout="column">
+                        <md-card>
+                            <md-card-title>
+                                <md-card-title-text>
+                                    <span class="md-headline">Quiz Question</span>
+                                </md-card-title-text>
+                            </md-card-title>
+                            <md-card-content>
+                                <md-input-container class="md-block" flex-gt-sm>
+                                    <label>Quiz Question</label>
+                                    <input ng-model="dailyChallengeQuiz.question">
+                                </md-input-container>
+                                <h4>Daily Challenge Quiz Translation</h4>
+                                <md-input-container md-no-float class="md-block" ng-repeat="option in dailyChallengeQuiz.translations_quiz">
+                                    <label>{{option.language}}</label>
+                                    <input ng-model="option.question">
+                                </md-input-container>
+                            </md-card-content>
+                        </md-card>
+                    </div>
+                    <div flex-xs flex-gt-xs="60" layout="column">
+                        <md-card>
+                            <md-card-title>
+                                <md-card-title-text>
+                                    <span class="md-headline">Quiz Answer</span>
+                                </md-card-title-text>
+                            </md-card-title>
+                            <md-card-content>
+                                <md-tabs md-dynamic-height md-border-bottom>
+                                    <md-tab label="{{questionType[$index]}}" ng-repeat="answer in dailyChallengeQuiz.answers">
+                                        <md-content class="md-padding">
+                                            <div class="row">
+                                                <div class="col-md-10 col-md-offset-1">
+                                                    <md-checkbox ng-model="answer.correct">
+                                                        <b>Correct</b>
+                                                    </md-checkbox>
+                                                    <br>
+                                                    <br>
+                                                    <label class="control-label">Daily Challenge Quiz Answer</label>
+                                                    <md-input-container md-no-float class="md-block">
+                                                        <input ng-model="answer.answer" placeholder="English Answer">
+                                                    </md-input-container>
+                                                    <label class="control-label">Daily Challenge Quiz Answer Translation</label>
+                                                    <br>
+                                                    <br>
+                                                    <md-input-container md-no-float class="md-block" ng-repeat="option in answer.translations_answer">
+                                                        <label>{{option.language}}</label>
+                                                        <input ng-model="option.answer">
+                                                    </md-input-container>
+                                                </div>
+                                            </div>
+                                        </md-content>
+                                    </md-tab>
+                                </md-tabs>
+                            </md-card-content>
+                        </md-card>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions layout="row">
+                <span flex></span>
+                <md-button class="md-raised " ng-click="closeDialog()">
+                    Cancel
+                </md-button>
+                <md-button class="md-raised md-primary" ng-click="saveEdit()">
+                    Save Change
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>

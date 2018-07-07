@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<div>
+    <md-card>
+        <md-card-title>
+            <md-card-title-text>
+                <span class="md-headline">Assign Quiz For Daily Challenge</span>
+            </md-card-title-text>
+        </md-card-title>
+        <md-card-content>
+            <form name="dailyChallengeFrom" id="wizardForm" ng-submit="submitToServer(dailyChallengeFrom)">
+                <div layout-gt-xs="row">
+                    <md-input-container class="md-block" flex-gt-xs>
+                        <label>Title</label>
+                        <input md-maxlength="255" name="title" ng-model="languageGroup.title" required>
+                        <div ng-messages="dailyChallengeFrom.title.$error">
+                            <div ng-message="required">This is required.</div>
+                            <div ng-message="md-maxlength">The description must be less than 255 characters long.</div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Enter date</label>
+                        <md-datepicker ng-model="publishDate"></md-datepicker>
+                    </md-input-container>
+                </div>
+                <div layout-gt-sm="row">
+                    <div class="md-block" flex-gt-sm>
+                        <md-chips ng-model="languageGroup.quiz" md-autocomplete-snap md-transform-chip="transformChip($chip)" md-require-match="true">
+                            <md-autocomplete md-selected-item="selectedItem.quiz" md-search-text="searchText.quiz" md-items="item in querySearch(searchText.quiz, 'quiz')"
+                                md-item-text="item" placeholder="Quiz Id (Search by id/title)" ng-show="languageGroup.quiz.length == 0">
+                                <span md-highlight-text="searchText.quiz">({{item.id}}){{item.question}}</span>
+                            </md-autocomplete>
+                            <md-chip-template>
+                                <span>
+                                    <strong>{{$chip.id}}</strong>
+                                    <em>({{$chip.question}})</em>
+                                </span>
+                            </md-chip-template>
+                        </md-chips>
+                    </div>
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Stream Group</label>
+                        <md-select name="streamGroups" ng-model="streamGroups['default']" required>
+                            <md-option ng-value="topping" ng-repeat="topping in streamGroups.availableOptions">{{topping.name}}</md-option>
+                            <div ng-messages="dailChallengeFrom.streamGroups.$error">
+                                <div ng-message="required">This field is required</div>
+                            </div>
+                        </md-select>
+                    </md-input-container>
+                </div>
+                <label class="control-label">Select Languages</label>
+                <div layout="row" layout-wrap flex>
+                    <div flex="50" ng-repeat="option in languageGroup.availableOptions">
+                        <md-checkbox ng-click="addOption(option)">
+                            {{option}}
+                        </md-checkbox>
+                    </div>
+                </div>
+                <div ng-cloak>
+                    <md-tabs md-dynamic-height md-border-bottom>
+                        <md-tab label="{{lang}}" ng-repeat="lang in languageGroup.model">
+                            <div class="md-padding">
+                                <md-input-container class="md-block" ng-if="lang != 'English'">
+                                    <label>Title (Translation)</label>
+                                    <input required name="lang" ng-model="languageGroup.dailyChallengeTranslation[lang]">
+                                    <div ng-messages="dailyChallengeFrom.lang.$error">
+                                        <div ng-message="required">This is required.</div>
+                                    </div>
+                                </md-input-container>
+                                <div layout="layout-gt-sm-row">
+                                    <md-input-container style="margin-right: 20px;">
+                                        <label>Type</label>
+                                        <md-select ng-model="languageGroup.type[lang]" required>
+                                            <md-option ng-repeat="type in tipsType" value="{{type}}" ng-click="getAutoComplete(type)">{{type}}</md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                    <md-chips ng-init="languageGroup.typeId[lang] = []" ng-model="languageGroup.typeId[lang]" md-autocomplete-snap md-transform-chip="transformChip($chip)"
+                                        md-require-match="true" style="margin-right: 20px;" ng-if="languageGroup.type[lang] == 'Luxury Culture'">
+                                        <md-autocomplete md-selected-item="selectedItem.luxuryCulture[lang]" md-search-text="searchText.luxuryCulture[lang]" md-items="item in querySearch(searchText.luxuryCulture[lang], 'luxury')"
+                                            md-item-text="item" placeholder="Search by Id" ng-show="languageGroup.typeId[lang].length == 0"
+                                            ng-if="languageGroup.type[lang] == 'Luxury Culture'">
+                                            <span md-highlight-text="searchText.luxuryCulture" ng-if="languageGroup.type[lang] == 'Luxury Culture'">({{item.id}}){{item.title}}</span>
+                                        </md-autocomplete>
+                                        <md-chip-template>
+                                            <span>
+                                                <strong>{{$chip.id}}</strong>
+                                                <em>({{$chip.title}})</em>
+                                            </span>
+                                        </md-chip-template>
+                                    </md-chips>
+                                    <md-chips ng-init="languageGroup.typeId[lang] = []" ng-model="languageGroup.typeId[lang]" md-autocomplete-snap md-transform-chip="transformChip($chip)"
+                                        md-require-match="true" style="margin-right: 20px;" ng-if="languageGroup.type[lang] == 'Knowledge'">
+                                        <md-autocomplete md-selected-item="selectedItem.knowledge[lang]" md-search-text="searchText.knowledge[lang]" md-items="item in querySearch(searchText.knowledge[lang], 'knowledge')"
+                                            md-item-text="item" placeholder="Search by Id" ng-show="languageGroup.typeId[lang].length == 0"
+                                            ng-if="languageGroup.type[lang] == 'Knowledge'">
+                                            <span md-highlight-text="searchText.knowledge" ng-if="languageGroup.type[lang] == 'Knowledge'">({{item.id}}){{item.title}}</span>
+                                        </md-autocomplete>
+                                        <md-chip-template>
+                                            <span>
+                                                <strong>{{$chip.id}}</strong>
+                                                <em>({{$chip.title}})</em>
+                                            </span>
+                                        </md-chip-template>
+                                    </md-chips>
+                                    <md-input-container class="md-block" flex-gt-sm>
+                                        <label>Products Group</label>
+                                        <md-select ng-model="productGroups[lang]" multiple required>
+                                            <md-optgroup label="Product Group">
+                                                <md-option ng-value="topping" ng-repeat="topping in productGroups.availableOptions">{{topping.name}}</md-option>
+                                            </md-optgroup>
+                                        </md-select>
+                                    </md-input-container>
+                                </div>
+                                <div layout-gt-sm="row">
+                                    <md-input-container class="md-block" flex-gt-sm>
+                                        <label>Available black list user group</label>
+                                        <md-select ng-model="userGroups[lang]['black']" multiple>
+                                            <md-optgroup label="Available black list user group">
+                                                <md-option ng-value="topping" ng-repeat="topping in userGroups.availableOptions">{{topping.name}}</md-option>
+                                            </md-optgroup>
+                                        </md-select>
+                                    </md-input-container>
+                                    <md-input-container class="md-block" flex-gt-sm>
+                                        <label>Available white list user group</label>
+                                        <md-select ng-model="userGroups[lang]['white']" multiple>
+                                            <md-optgroup label="Available white list user group">
+                                                <md-option ng-value="topping" ng-repeat="topping in userGroups.availableOptions">{{topping.name}}</md-option>
+                                            </md-optgroup>
+                                        </md-select>
+                                    </md-input-container>
+                                </div>
+                            </div>
+                        </md-tab>
+                    </md-tabs>
+                </div>
+                <div class="footer">
+                    <md-button class="md-raised md-primary pull-right" type="submit">Submit</md-button>
+                    <div class="clearfix"></div>
+                </div>
+            </form>
+        </md-card-content>
+    </md-card>
+</div>

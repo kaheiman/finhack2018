@@ -1,0 +1,257 @@
+<style>
+    .md-datepicker-calendar-pane {
+        z-index: 1151
+    }
+
+    .md-autocomplete-suggestions-container {
+        z-index: 100000 !important;
+        /* any number of choice > 1050*/
+    }
+
+    .label.ng-binding {
+        color: rgba(0, 0, 0, .54) !important;
+        font-size: 100% !important;
+    }
+
+    .md-toolbar-tools>input {
+        width: 100%;
+        margin: 0;
+        border: none;
+        color: rgba(0, 0, 0, 0.87);
+    }
+
+    .languageBtn {
+        min-width: 0px;
+    }
+
+    .fullscreen-dialog {
+        max-width: 100%;
+        max-height: 100%;
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+    }
+</style>
+<div class="content">
+    <md-card>
+        <md-toolbar class="md-table-toolbar md-default" ng-show="!filter.show">
+            <div class="md-toolbar-tools">
+                <span>Product List</span>
+                <div flex></div>
+                <md-button class="md-icon-button" ng-click="filter.show = true">
+                    <md-icon>search</md-icon>
+                </md-button>
+                <md-button class="md-icon-button" ui-sref="luxuryCulture_create">
+                    <md-icon>add_box</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-toolbar class="md-table-toolbar md-default" ng-show="filter.show">
+            <div class="md-toolbar-tools">
+                <md-icon class="material-icons">search</md-icon>
+                <input flex="" ng-model="search.$" ng-model-options="filter.options" placeholder="Search">
+                <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="removeFilter()">
+                    <md-icon class="material-icons">close</md-icon>
+                </button>
+            </div>
+        </md-toolbar>
+        <md-table-container>
+            <table md-table>
+                <thead md-head md-order="query.order">
+                    <tr md-row class="md-row">
+                        <th md-column md-order-by="id">
+                            <span>Id</span>
+                        </th>
+                        <th md-column md-order-by="title">
+                            <span>Product Name</span>
+                        </th>
+                        <th md-column md-order-by="publish_date">
+                            <span>Production Date</span>
+                        </th>
+                        <th md-column md-order-by="price">
+                                <span>Shelf life</span>
+                        </th>                            
+                        <th md-column md-order-by="quantity">
+                            <span>Remaining quantity</span>
+                        </th>
+                        <th md-column md-order-by="price">
+                            <span>Price</span>
+                        </th>                                                                       
+                        <th md-column>
+                            <span>Action</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody md-body>
+                    <tr md-row ng-repeat="item in cultureList | orderBy: '-' + query.order | filter:search | limitTo: query.limit: (query.page - 1) * query.limit ">
+                        <td md-cell>{{item.id}}</td>
+                        <td md-cell>{{item.title}}</td>
+                        <td md-cell>{{item.publish_date}}</td>
+                        <td md-cell>
+                                <div layout>
+                                    0<md-slider flex md-discrete ng-model="item.rates" step="1" min="1" max="5" aria-label="rating">
+                                    </md-slider>5
+                                </div>
+                        </td>                        
+                        <td md-cell>{{item.quantity}}</td>
+                        <td md-cell>{{item.price}}</td>
+                        <td md-cell><md-button class="md-raised md-warn">Donate</md-button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+        <md-table-pagination md-limit="query.limit" md-limit-options="[15, 20, 25]" md-page="query.page" md-total="{{cultureList.length}}"
+            md-on-paginate="" md-page-select></md-table-pagination>
+    </md-card>
+</div>
+<script type="text/ng-template" id="translate.luxuryCulture.html">
+    <md-dialog class="fullscreen-dialog" aria-label="Mango (Fruit)" flex="80%">
+        <form ng-cloak style="height:100%;">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>Translate Luxury Culture [{{translate.language}}]</h2>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+            <md-dialog-content style="height:100%;">
+                <div class="md-dialog-content" class="md-padding" layout-xs="column" layout="row">
+                    <div flex-xs flex-gt-xs="50" layout="column">
+                        <md-card-title>
+                            <br>
+                            <md-card-title-text>
+                                <md-input-container class="md-block md-headline" flex-gt-sm>
+                                    <label>Luxury Culture Title</label>
+                                    <input ng-model="luxuryCulture.title" name="title" ng-disabled="true">
+                                </md-input-container>
+                            </md-card-title-text>
+                        </md-card-title>
+                        <md-card-content>
+                            <div text-angular ng-model="luxuryCulture.content" ta-disabled="true"></div>
+                        </md-card-content>
+                    </div>
+                    <div flex-xs flex-gt-xs="50" layout="column">
+                        <md-card-title>
+                            <br>
+                            <md-card-title-text>
+                                <md-input-container class="md-block md-headline" flex-gt-sm>
+                                    <label>Luxury Culture Title</label>
+                                    <input required ng-model="translate.title" name="title">
+                                    <div ng-messages="lcForm.title.$error">
+                                        <div ng-message="required">This is required.</div>
+                                    </div>
+                                </md-input-container>
+                            </md-card-title-text>
+                        </md-card-title>
+                        <md-card-content>
+                            <div text-angular ng-model="translate.content"></div>
+                        </md-card-content>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions layout="row">
+                <span flex></span>
+                <md-button ng-click="closeDialog()">
+                    Cancel
+                </md-button>
+                <md-button class="md-raised md-primary" ng-click="saveEdit()">
+                    Save Translate
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+<script type="text/ng-template" id="edit.luxuryCulture.html">
+    <md-dialog class="fullscreen-dialog" aria-label="Mango (Fruit)" flex="80%">
+
+        <form name="lcForm" ng-cloak style="height:100%;">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>Edit Luxury Culture</h2>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+            <md-dialog-content style="height:100%;">
+                <div class="md-dialog-content" class="md-padding" layout-xs="column" layout="row">
+                    <div flex-xs flex-gt-xs="30" layout="column">
+                        <md-card style="height:  100%;">
+                            <img src="{{luxuryCulture.cover_url}}" style=" width: auto; height : auto; max-height: 100%; max-width: 100%;">
+                            <md-card-content>
+                                <div layout-gt-xs="row">
+                                    <md-input-container flex>
+                                        <label>Product Group</label>
+                                        <md-select required ng-model="luxuryCulture.product_group" multiple name="productGroups">
+                                            <md-optgroup label="Product Group">
+                                                <md-option ng-value="pg.id" ng-repeat="pg in productGroups">{{pg.name}}</md-option>
+                                            </md-optgroup>
+                                        </md-select>
+                                        <div ng-messages="lcForm.productGroups.$error">
+                                            <div ng-message="required">This is required.</div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container>
+                                        <label>Publish Date</label>
+                                        <md-datepicker required ng-model="luxuryCulture.publish_date" name="publishDate"></md-datepicker>
+                                        <div ng-messages="lcForm.publishDate.$error">
+                                            <div ng-message="required">This is required.</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div>
+                                    <md-input-container class="md-block" flex-gt-xs layout-gt-xs="row">
+                                        <label>Available black list user group</label>
+                                        <md-select ng-model="luxuryCulture.black_list_user_group" multiple name="black">
+                                            <md-optgroup label="User Group">
+                                                <md-option ng-value="ug.id" ng-repeat="ug in userGroups">{{ug.name}}</md-option>
+                                            </md-optgroup>
+                                        </md-select>
+                                    </md-input-container>
+                                </div>
+                                <div>
+                                    <md-input-container class="md-block" flex-gt-xs layout-gt-xs="row">
+                                        <label>Available white list user group</label>
+                                        <md-select ng-model="luxuryCulture.white_list_user_group" multiple name="white">
+                                            <md-optgroup label="User Group">
+                                                <md-option ng-value="ug.id" ng-repeat="ug in userGroups">{{ug.name}}</md-option>
+                                            </md-optgroup>
+                                        </md-select>
+                                    </md-input-container>
+                                </div>
+                            </md-card-content>
+                        </md-card>
+                    </div>
+                    <div flex-xs flex-gt-xs="70" layout="column">
+                        <md-card>
+                            <md-tabs md-dynamic-height md-border-bottom>
+                                <md-tab ng-repeat="t in translate" label="{{t.language}}">
+                                    <md-content class="md-padding">
+                                        <h1 class="md-display-2">
+                                            <md-input-container class="md-block md-headline" flex-gt-sm>
+                                                <label>Luxury Culture Title</label>
+                                                <input required ng-model="t.title" name="t.title">
+                                                <div ng-messages="lcForm.title.$error">
+                                                    <div ng-message="required">This is required.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </h1>
+                                        <p>
+                                            <div text-angular ng-model="t.content"></div>
+                                        </p>
+                                    </md-content>
+                                </md-tab>
+                            </md-tabs>
+                        </md-card>
+                    </div>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions layout="row">
+                <span flex></span>
+                <md-button ng-click="closeDialog()">
+                    Cancel
+                </md-button>
+                <md-button class="md-raised md-primary" ng-click="saveEdit(lcForm)">
+                    Save Luxury Culture
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>

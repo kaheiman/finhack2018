@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<div>
+    <div layout="column" ng-cloak>
+    <!-- <md-content class="md-padding">
+              <md-autocomplete
+                  ng-disabled="vm.isDisabled"
+                  md-no-cache="vm.noCache"
+                  md-selected-item="vm.selectedItem"
+                  md-search-text-change="vm.searchTextChange(vm.searchText)"
+                  md-search-text="vm.searchText"
+                  md-selected-item-change="vm.selectedItemChange(item)"
+                  md-items="item in vm.querySearch(vm.searchText)"
+                  md-item-text="item.display"
+                  md-min-length="0"
+                  placeholder="What shop do you have in mind ....">
+                <md-item-template>
+                  <span md-highlight-text="vm.searchText" md-highlight-flags="^i">{{item.display}}</span>
+                </md-item-template>
+              </md-autocomplete>
+              <br/>
+    
+            </form>
+    </md-content>     -->
+    
+    
+    <div layout layout-padding layout-margin layout-fill ng-show="newLuxuryCulture.title.length < 12 || !newLuxuryCulture.title"></div>
+    <div layout layout-padding layout-margin layout-fill ng-show="newLuxuryCulture.title.length < 12 || !newLuxuryCulture.title"></div>     
+    <div layout layout-padding layout-margin layout-fill ng-show="newLuxuryCulture.title.length < 12 || !newLuxuryCulture.title"></div>
+    <div layout layout-padding layout-margin layout-fill ng-show="newLuxuryCulture.title.length < 12 || !newLuxuryCulture.title"></div>  
+    <div layout layout-padding layout-margin layout-fill ng-show="newLuxuryCulture.title.length < 12 || !newLuxuryCulture.title"></div>
+    <div layout layout-padding layout-margin layout-fill ng-show="newLuxuryCulture.title.length < 12 || !newLuxuryCulture.title"></div>  
+    <div layout layout-padding layout-margin layout-fill ng-show="newLuxuryCulture.title.length < 12 || !newLuxuryCulture.title"></div>
+    <div layout layout-padding layout-margin layout-fill ng-show="newLuxuryCulture.title.length < 12 || !newLuxuryCulture.title"></div>      
+    <div layout layout-padding layout-margin layout-fill ng-show="newLuxuryCulture.title.length < 12 || !newLuxuryCulture.title"></div>
+    <div layout layout-padding layout-margin layout-fill ng-show="newLuxuryCulture.title.length < 12 || !newLuxuryCulture.title"></div>  
+    <div layout layout-padding layout-margin layout-fill ng-show="newLuxuryCulture.title.length < 12 || !newLuxuryCulture.title"></div>
+    <div layout layout-padding layout-margin layout-fill ng-show="newLuxuryCulture.title.length < 12 || !newLuxuryCulture.title"></div>               
+    <!-- <div layout layout-padding layout-margin layout-fill>
+        <md-input-container class="md-block" flex-gt-sm>
+                <label>What shop do you have in mind ...</label>
+                <input required ng-model="newLuxuryCulture.title" name="title">
+                <div ng-messages="lcForm.title.$error">
+                    <div ng-message="required">This is required.</div>
+                </div>
+        </md-input-container> 
+    </div> -->
+    
+    <!-- ng-class="{test: hover}" ng-mouseover="hover = true" ng-mouseleave="hover = false" -->
+    <div ng-show = "!finhack2 && !finhack5">
+      <img ng-src="{{a}}" class="md-card-image" alt="Washed Out"  style="position:absolute; left: 0px; top: 0px; width:1320px; height:360px; background-size:cover;" >
+      <img ng-src="{{b}}" ng-click="change(1)" class="md-card-image" alt="Washed Out" style="position:absolute; top: 400px; left: 570px; width: 150px; background-size:cover;" ng-mouseover="change2(true)" ng-mouseleave="change2(false)" >
+      <img ng-src="{{c}}" class="fadeInOut" alt="Washed Out" style="position:absolute; top: 400px; left: 630px; width: 30px; top: 680px; background-size:cover;">
+    </div>
+    <div ng-show = "finhack2 && !finhack5">
+      <img ng-show = "!finhack3" ng-src="{{d}}" class="w3-animate-top" alt="Washed Out" style="background-size:cover; position:absolute; left: -10px; top: 0px; width:1320px; ">
+      <div ng-show = "!finhack3" ng-click="finhack3 = !finhack3" style=" width: 220px; height: 240px; position: absolute; left:50px; top: 200px;"></div>
+    </div>
+
+    <div ng-show= "finhack3">
+      <img ng-src="{{e}}" class="w3-animate-top" alt="Washed Out" style="background-size:cover; position:absolute; left: -10px; top: 0px; width:1320px; ">
+      <div ng-show = "finhack3" ng-click="finhack3 = !finhack3; finhack4 = !finhack4" style=" width: 120px; height: 100px; position: absolute; left:940px; top: 0px;"></div>
+    </div>
+      <img ng-show = "finhack4" ng-src="{{f}}" class="w3-animate-top" alt="Washed Out" style="background-size:cover; position:absolute; left: 900px; top: 78px; width:400px; ">
+      <div ng-show = "finhack4" ng-click="finhack5 = !finhack5;" style=" width: 120px; height: 100px; position: absolute; left:820px; top: 0px;"></div>
+
+      <img ng-show = "finhack5" ng-src="{{i}}"  alt="Washed Out" style="background-size:cover; position:absolute; left: 0px; top: 0px; width:1320px;">
+      <img ng-show = "finhack5" ng-src="{{g}}"  ng-class= '{ original: motion }' alt="Washed Out" style="background-size:cover; position:absolute; left: 800px; top: 78px; width:1100px; height:700px;">
+      <img ng-show = "finhack5" ng-src="{{h}}"  ng-class='{ original1: motion }' alt="Washed Out" style="background-size:cover; position:absolute; left: -600px; top: 78px; width:1100px; height:700px;">
+      <img ng-show = "finhack5" ng-src="{{j}}"  alt="Washed Out" style="z-index: 9999; background-size:cover; position:absolute; left: 550px; top: 390px; width:200px;">
+      <div ng-show = "finhack5" ng-click="motion = !motion" style="z-index: 10000; width: 200px; height: 100px; position: absolute; left:550px; top: 370px;"></div>      
+
+    <img ng-src="{{speech2}}" class="md-card-image" alt="Washed Out" width="440px" height="200px" style="position:absolute; top:420px; left: 200px;" ng-show="filter1 == true">
+    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap  style="position:absolute; top:530px; left: 270px;" ng-show="filter1 == true">
+        <md-button class="md-raised md-primary" style="background-color:#ac1212;" ng-click="change('2')">1-2 times</md-button>
+        <md-button class="md-raised md-primary" style="background-color:#ac1212;" ng-click="change('2')">3-5 times</md-button>
+        <md-button class="md-raised md-primary" style="background-color:#ac1212;" ng-click="change('2')">>5 times</md-button>
+    </section>   
+    
+    <img ng-src="{{speech3}}" class="md-card-image" alt="Washed Out" width="440px" height="200px" style="position:absolute; top:420px; left: 200px;" ng-show="filter2 == true">
+    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap  style="position:absolute; top:530px; left: 270px;" ng-show="filter2 == true">
+        <md-button class="md-raised md-primary" style="background-color:#ac1212;" ng-click="change('2')">Road Bike</md-button>
+        <md-button class="md-raised md-primary" style="background-color:#ac1212;" ng-click="change('2')">Kids Bike</md-button>
+        <md-button class="md-raised md-primary" style="background-color:#ac1212;" ng-click="change('2')">Mountain Bike</md-button>
+    </section>
+    
+    <img ng-src="{{speech4}}" class="md-card-image" alt="Washed Out" width="440px" height="200px" style="position:absolute; top:420px; left: 200px;" ng-show="filter3 == true">
+    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap  style="position:absolute; top:530px; left: 270px;" ng-show="filter3 == true">
+        <md-button class="md-raised md-primary" style="background-color:#ac1212;" ng-click="change('3')">1-2 times</md-button>
+        <md-button class="md-raised md-primary" style="background-color:#ac1212;" ng-click="change('3')">3-5 times</md-button>
+        <md-button class="md-raised md-primary" style="background-color:#ac1212;" ng-click="change('3')">>5 times</md-button>      
+    </section> 
+    
+    <img ng-src="{{speech5}}" class="md-card-image" alt="Washed Out" width="440px" height="200px" style="position:absolute; top:420px; left: 200px;" ng-show="filter4 == true">
+    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap  style="position:absolute; top:530px; left: 270px;" ng-show="filter4 == true">
+        <md-button class="md-raised md-primary" style="background-color:#ac1212;" ng-click="change('2')">Kids Pool</md-button>
+        <md-button class="md-raised md-primary" style="background-color:#ac1212;" ng-click="change('2')">Training Pool</md-button>
+        <md-button class="md-raised md-primary" style="background-color:#ac1212;" ng-click="change('2')">Diving Pool</md-button>
+    </section> 
+    
+    <img ng-src="{{speech6}}" class="md-card-image" alt="Washed Out" width="440px" height="200px" style="position:absolute; top:420px; left: 200px;" ng-show="filter5 == true">
+    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap  style="position:absolute; top:530px; left: 270px;" ng-show="filter5 == true">
+        <md-button class="md-raised md-primary" style="background-color:#ac1212;" ng-click="change('2')"> less $50</md-button>
+        <md-button class="md-raised md-primary" style="background-color:#ac1212;" ng-click="change('2')">$50 - $100</md-button>
+        <md-button class="md-raised md-primary" style="background-color:#ac1212;" ng-click="change('2')">> $100</md-button>
+    </section>   
+
+    <img ng-src="{{recom}}" class="md-card-image" alt="Washed Out" width="670px" height="520px" style="position:absolute; top:170px; left: 140px;" ng-show="filter6 == true">  
+
+
+    <md-content class="md-padding" layout-xs="column" layout="row" ng-show="newLuxuryCulture.title.length > 11">  
+      
+        <div flex-xs flex-gt-xs="33" layout="column">
+            <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+              
+                <img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out" style="background-color:white;">
+              
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Banana</span>
+                  <div layout>
+                      <span class="md-body-1">Minimum Bid Price: 0.6 EOS</span>
+                  </div> 
+                </md-card-title-text>
+              </md-card-title>
+              <md-card-content>
+                  <div layout>
+                      0<md-slider flex md-discrete ng-model="rating1" step="1" min="1" max="5" aria-label="rating">
+                      </md-slider>Full
+                    </div>
+                    <div layout layout-align="center center">
+                        <span class="md-body-1">Shelf Life</span>
+                    </div>                    
+              </md-card-content>
+              <md-card-actions layout="row" layout-align="end center">
+                <md-button class="md-raised">DETAIL</md-button>
+                <md-button class="md-primary md-raised" ng-click="showAdvanced($event)">BID</md-button>
+              </md-card-actions>
+            </md-card>
+            <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+              
+                <img ng-src="{{imagePath1}}" class="md-card-image" alt="Washed Out" style="background-color:white;">
+              
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Apple</span>
+                  <div layout>
+                      <span class="md-body-1">Minimum Bid Price: 0.2 EOS</span>
+                  </div> 
+                </md-card-title-text>
+              </md-card-title>
+              <md-card-content>
+                  <div layout>
+                      0<md-slider flex md-discrete ng-model="rating7" step="1" min="1" max="5" aria-label="rating">
+                      </md-slider>Full
+                    </div>
+                    <div layout layout-align="center center">
+                        <span class="md-body-1">Shelf Life</span>
+                    </div>                    
+              </md-card-content>
+              <md-card-actions layout="row" layout-align="end center">
+                <md-button class="md-raised">DETAIL</md-button>
+                <md-button class="md-primary md-raised" ng-click="showAdvanced($event)">BID</md-button>
+              </md-card-actions>
+            </md-card>  
+            <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+              
+                <img ng-src="{{imagePath2}}" class="md-card-image" alt="Washed Out" style="background-color:white;">
+              
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Milk</span>
+                  <div layout>
+                      <span class="md-body-1">Minimum Bid Price: 0.1 EOS</span>
+                  </div> 
+                </md-card-title-text>
+              </md-card-title>
+              <md-card-content>
+                  <div layout>
+                      0<md-slider flex md-discrete ng-model="rating8" step="1" min="1" max="5" aria-label="rating">
+                      </md-slider>Full
+                    </div>
+                    <div layout layout-align="center center">
+                        <span class="md-body-1">Shelf Life</span>
+                    </div>                    
+              </md-card-content>
+              <md-card-actions layout="row" layout-align="end center">
+                <md-button class="md-raised">DETAIL</md-button>
+                <md-button class="md-primary md-raised" ng-click="showAdvanced($event)">BID</md-button>
+              </md-card-actions>
+            </md-card>                      
+        </div> 
+
+        <div flex-xs flex-gt-xs="33" layout="column">
+            <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+              
+                <img ng-src="{{imagePath3}}" class="md-card-image" alt="Washed Out" style="background-color:white;">
+              
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Pear</span>
+                  <div layout>
+                      <span class="md-body-1">Minimum Bid Price: 0.33 EOS</span>
+                  </div> 
+                </md-card-title-text>
+              </md-card-title>
+              <md-card-content>
+                  <div layout>
+                      0<md-slider flex md-discrete ng-model="rating9" step="1" min="1" max="5" aria-label="rating">
+                      </md-slider>Full
+                    </div>
+                    <div layout layout-align="center center">
+                        <span class="md-body-1">Shelf Life</span>
+                    </div>                    
+              </md-card-content>
+              <md-card-actions layout="row" layout-align="end center">
+                <md-button class="md-raised">DETAIL</md-button>
+                <md-button class="md-primary md-raised" ng-click="showAdvanced($event)">BID</md-button>
+              </md-card-actions>
+            </md-card>
+            <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+              
+                <img ng-src="{{imagePath4}}" class="md-card-image" alt="Washed Out" style="background-color:white;">
+              
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Cabbage</span>
+                  <div layout>
+                      <span class="md-body-1">Minimum Bid Price: 0.2 EOS</span>
+                  </div> 
+                </md-card-title-text>
+              </md-card-title>
+              <md-card-content>
+                  <div layout>
+                      0<md-slider flex md-discrete ng-model="rating2" step="1" min="1" max="5" aria-label="rating">
+                      </md-slider>Full
+                    </div>
+                    <div layout layout-align="center center">
+                        <span class="md-body-1">Shelf Life</span>
+                    </div>                    
+              </md-card-content>
+              <md-card-actions layout="row" layout-align="end center">
+                <md-button class="md-raised">DETAIL</md-button>
+                <md-button class="md-primary md-raised" ng-click="showAdvanced($event)">BID</md-button>
+              </md-card-actions>
+            </md-card>  
+            <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+              
+                <img ng-src="{{imagePath5}}" class="md-card-image" alt="Washed Out" style="background-color:white;">
+              
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Carrot</span>
+                  <div layout>
+                      <span class="md-body-1">Minimum Bid Price: 0.13 EOS</span>
+                  </div> 
+                </md-card-title-text>
+              </md-card-title>
+              <md-card-content>
+                  <div layout>
+                      0<md-slider flex md-discrete ng-model="rating3" step="1" min="1" max="5" aria-label="rating">
+                      </md-slider>Full
+                    </div>
+                    <div layout layout-align="center center">
+                        <span class="md-body-1">Shelf Life</span>
+                    </div>                    
+              </md-card-content>
+              <md-card-actions layout="row" layout-align="end center">
+                <md-button class="md-raised">DETAIL</md-button>
+                <md-button class="md-primary md-raised" ng-click="showAdvanced($event)">BID</md-button>
+              </md-card-actions>
+            </md-card>                      
+        </div> 
+        <div flex-xs flex-gt-xs="33" layout="column">
+            <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+              
+                <img ng-src="{{imagePath6}}" class="md-card-image" alt="Washed Out" style="background-color:white;">
+              
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Orange Juice</span>
+                  <div layout>
+                      <span class="md-body-1">Minimum Bid Price: 0.1 EOS</span>
+                  </div> 
+                </md-card-title-text>
+              </md-card-title>
+              <md-card-content>
+                  <div layout>
+                      0<md-slider flex md-discrete ng-model="rating4" step="1" min="1" max="5" aria-label="rating">
+                      </md-slider>Full
+                    </div>
+                    <div layout layout-align="center center">
+                        <span class="md-body-1">Shelf Life</span>
+                    </div>                    
+              </md-card-content>
+              <md-card-actions layout="row" layout-align="end center">
+                <md-button class="md-raised">DETAIL</md-button>
+                <md-button class="md-primary md-raised" ng-click="showAdvanced($event)">BID</md-button>
+              </md-card-actions>
+            </md-card>
+            <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+              
+                <img ng-src="{{imagePath7}}" class="md-card-image" alt="Washed Out" style="background-color:white;">
+              
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Broccolli</span>
+                  <div layout>
+                      <span class="md-body-1">Minimum Bid Price: 0.2 EOS</span>
+                  </div> 
+                </md-card-title-text>
+              </md-card-title>
+              <md-card-content>
+                  <div layout>
+                      0<md-slider flex md-discrete ng-model="rating5" step="1" min="1" max="5" aria-label="rating">
+                      </md-slider>Full
+                    </div>
+                    <div layout layout-align="center center">
+                        <span class="md-body-1">Shelf Life</span>
+                    </div>                    
+              </md-card-content>
+              <md-card-actions layout="row" layout-align="end center">
+                <md-button class="md-raised">DETAIL</md-button>
+                <md-button class="md-primary md-raised" ng-click="showAdvanced($event)">BID</md-button>
+              </md-card-actions>
+            </md-card>  
+            <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" md-theme-watch>
+              
+                <img ng-src="{{imagePath8}}" class="md-card-image" alt="Washed Out" style="background-color:white;">
+              
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Watermelon</span>
+                  <div layout>
+                      <span class="md-body-1">Minimum Bid Price: 1 EOS</span>
+                  </div> 
+                </md-card-title-text>
+              </md-card-title>
+              <md-card-content>
+                  <div layout>
+                      0<md-slider flex md-discrete ng-model="rating6" step="1" min="1" max="5" aria-label="rating">
+                      </md-slider>Full
+                    </div>
+                    <div layout layout-align="center center">
+                        <span class="md-body-1">Shelf Life</span>
+                    </div>                    
+              </md-card-content>
+              <md-card-actions layout="row" layout-align="end center">
+                <md-button class="md-raised">DETAIL</md-button>
+                <md-button class="md-primary md-raised" ng-click="showAdvanced($event)">BID</md-button>
+              </md-card-actions>
+            </md-card>                      
+        </div>                 
+
+      <!-- <div flex-xs flex-gt-xs="33" layout="column">
+          <md-card>
+            <img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out">
+            <md-card-title>
+              <md-card-title-text>
+                <span class="md-headline">Action buttons</span>
+              </md-card-title-text>
+            </md-card-title>
+            <md-card-content>
+              <p>
+                The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+              </p>
+              <p>
+                The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+              </p>
+              <p>
+                The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+              </p>
+            </md-card-content>
+            <md-card-actions layout="row" layout-align="end center">
+              <md-button>Action 1</md-button>
+              <md-button>Action 2</md-button>
+            </md-card-actions>
+          </md-card>
+          <md-card>
+              <img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out">
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Action buttons</span>
+                </md-card-title-text>
+              </md-card-title>
+              <md-card-content>
+                <p>
+                  The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                  two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                </p>
+                <p>
+                  The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                  two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                </p>
+                <p>
+                  The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                  two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                </p>
+              </md-card-content>
+              <md-card-actions layout="row" layout-align="end center">
+                <md-button>Action 1</md-button>
+                <md-button>Action 2</md-button>
+              </md-card-actions>
+            </md-card>
+            <md-card>
+                <img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out">
+                <md-card-title>
+                  <md-card-title-text>
+                    <span class="md-headline">Action buttons</span>
+                  </md-card-title-text>
+                </md-card-title>
+                <md-card-content>
+                  <p>
+                    The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                    two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                  </p>
+                  <p>
+                    The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                    two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                  </p>
+                  <p>
+                    The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                    two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+                  </p>
+                </md-card-content>
+                <md-card-actions layout="row" layout-align="end center">
+                  <md-button>Action 1</md-button>
+                  <md-button>Action 2</md-button>
+                </md-card-actions>
+              </md-card>                          
+    </div>   
+    
+    <div flex-xs flex-gt-xs="33" layout="column">
+        <md-card>
+          <img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out">
+          <md-card-title>
+            <md-card-title-text>
+              <span class="md-headline">Action buttons</span>
+            </md-card-title-text>
+          </md-card-title>
+          <md-card-content>
+            <p>
+              The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+              two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+            </p>
+            <p>
+              The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+              two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+            </p>
+            <p>
+              The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+              two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+            </p>
+          </md-card-content>
+          <md-card-actions layout="row" layout-align="end center">
+            <md-button>Action 1</md-button>
+            <md-button>Action 2</md-button>
+          </md-card-actions>
+        </md-card>
+        <md-card>
+            <img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out">
+            <md-card-title>
+              <md-card-title-text>
+                <span class="md-headline">Action buttons</span>
+              </md-card-title-text>
+            </md-card-title>
+            <md-card-content>
+              <p>
+                The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+              </p>
+              <p>
+                The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+              </p>
+              <p>
+                The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+                two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+              </p>
+            </md-card-content>
+            <md-card-actions layout="row" layout-align="end center">
+              <md-button>Action 1</md-button>
+              <md-button>Action 2</md-button>
+            </md-card-actions>
+          </md-card>                        
+  </div>        -->
+
+
+</md-content>
+<md-content class="md-padding" layout-xs="column" layout="row" ng-show="newLuxuryCulture.title.length > 11"> 
+  <div flex-xs flex-gt-xs="40" layout="column">
+    <img ng-src="{{myad2}}" class="md-card-image" alt="Washed Out" style="background-color:white;" height="300px" width="300px">
+  </div>
+  <div flex-xs flex-gt-xs="40" layout="column"><img ng-src="{{myad1}}" class="md-card-image" alt="Washed Out" style="background-color:white;" height="300px" width="300px">
+  </div>
+</md-content>
+</div>
+
+<script type="text/ng-template" id="create.record.one.html">
+  <md-dialog aria-label="Mango (Fruit)">
+      <form ng-cloak>
+        <md-toolbar>
+          <div class="md-toolbar-tools">
+            <h2>Transactions Record</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+              <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+          </div>
+        </md-toolbar>
+    
+        <md-dialog-content style="background-color:white;">
+          <div class="md-dialog-content" style="color:black;">
+              <div layout="row">
+                  <md-slider-container>
+                      <span>Quantity</span>
+                      <md-slider min="0" max="255" ng-model="color.red" aria-label="red" id="red-slider"
+                                  class="md-warn" style="color:black;">
+                      </md-slider>
+                      <md-input-container>
+                        <input type="number" ng-model="color.red" aria-label="red" aria-controls="red-slider" style="color:black;">
+                      </md-input-container>
+                    </md-slider-container>                
+              </div>
+              <div layout="row">
+                  <span>Price:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> {{price.red}} * {{color.red}}
+              </div>
+              <md-table-container>
+                  <table md-table>
+                      <thead md-head md-order="query.order">
+                          <tr md-row class="md-row">
+                              <th md-column md-order-by="Buyer">
+                                  <span>Buyer</span>
+                              </th>
+                              <th md-column md-order-by="Quantity">
+                                  <span>Quantity</span>
+                              </th>
+                              <th md-column md-order-by="Time">
+                                  <span>Time</span>
+                              </th>
+                              <th md-column md-order-by="Status">
+                                  <span>Status</span>
+                              </th>                            
+                          </tr>
+                      </thead>
+                      <tbody md-body>
+                          <tr md-row ng-repeat="item in cultureList | orderBy: '-' + query.order | filter:search | limitTo: query.limit: (query.page - 1) * query.limit ">
+                              <td md-cell>{{item.title}}</td>
+                              <td md-cell>{{item.quantity}}</td>
+                              <td md-cell>{{item.publish_date|date:'yyyy-MM-dd'}}</td>                      
+                              <td md-cell>{{item.status}}</td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </md-table-container>
+          </div>
+        </md-dialog-content>
+    
+        <md-dialog-actions layout="row" style="background-color:white;"> 
+          <span flex></span>
+          <!-- <div layout="row" layout-sm="column" layout-align="space-around">
+            <md-progress-circular ng-disabled="true" class="md-hue-2" md-diameter="20px"></md-progress-circular>          
+          </div> -->
+          <md-button ng-click="answer('useful')" class="md-primary">
+              CANCEL
+            </md-button>          
+          <md-button ng-click="answer('useful')" class="md-primary">
+            PAY
+          </md-button>
+        </md-dialog-actions>
+      </form>
+    </md-dialog>
+</script>

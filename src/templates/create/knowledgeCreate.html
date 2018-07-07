@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<div>
+    <md-card>
+        <md-card-title>
+            <md-card-title-text>
+                <span class="md-headline">Create your own Knowledge</span>
+            </md-card-title-text>
+        </md-card-title>
+        <md-card-content>
+            <form name="knowledgeCreateFrom" id="knowledgeCreateFrom" ng-submit="submit(knowledgeCreateFrom)">
+                <div layout-gt-xs="row">
+                    <md-input-container>
+                        <label>Publish Date</label>
+                        <md-datepicker name="publishDate" ng-model="date.publishDate" valid required></md-datepicker>
+                        <div ng-messages="knowledgeCreateFrom.publishDate.$error">
+                            <div ng-message="valid">The entered value is not a date!</div>
+                            <div ng-message="required">This is required.</div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container flex="70％">
+                        <label>Practice Number</label>
+                        <input name="practiceNumber" ng-model="languageGroup.practiceNumber" ng-pattern="/^[0-9]*$/" required/>
+                        <div ng-messages="knowledgeCreateFrom.practiceNumber.$error">
+                            <div ng-message="required">This is required.</div>
+                            <div ng-message="pattern">Please enter whole number.</div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container>
+                        <md-checkbox ng-model="date.linkWithPublishDate">
+                            Link with Publish Date
+                        </md-checkbox>
+                    </md-input-container>
+                </div>
+                <div layout-gt-xs="row">
+                    <md-input-container flex="50">
+                        <label>Select Group</label>
+                        <md-select name="steamGroups" ng-model="streamGroups['default']" required>
+                            <md-optgroup label="Stream Group">
+                                <md-option ng-value="topping" ng-repeat="topping in streamGroups.availableOptions">{{topping.name}}</md-option>
+                            </md-optgroup>
+                        </md-select>
+                        <div ng-messages="knowledgeCreateFrom.steamGroups.$error">
+                            <div ng-message="required">This is required.</div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container flex="50">
+                        <label>Products Group</label>
+                        <md-select name="productGroups" ng-model="productGroups.knowledge" multiple required>
+                            <md-optgroup label="Product Group">
+                                <md-option ng-value="topping" ng-repeat="topping in productGroups.availableOptions">{{topping.name}}</md-option>
+                            </md-optgroup>
+                        </md-select>
+                        <div ng-messages="knowledgeCreateFrom.productGroups.$error">
+                            <div ng-message="required">This is required.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <div layout-gt-xs="row">
+                    <md-input-container flex="50">
+                        <label>Available black list user group</label>
+                        <md-select ng-model="userGroups.knowledge['black']" multiple>
+                            <md-optgroup label="User Group">
+                                <md-option ng-value="topping" ng-repeat="topping in userGroups.availableOptions">{{topping.name}}</md-option>
+                            </md-optgroup>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container flex="50">
+                        <label>Available white list user group</label>
+                        <md-select ng-model="userGroups.knowledge['white']" multiple>
+                            <md-optgroup label="User Group">
+                                <md-option ng-value="topping" ng-repeat="topping in userGroups.availableOptions">{{topping.name}}</md-option>
+                            </md-optgroup>
+                        </md-select>
+                    </md-input-container>
+                </div>
+                <div ng-cloak>
+                    <label class="control-label">Select Languages</label>
+                    <div layout="row" layout-wrap flex>
+                        <div flex="50" ng-repeat="option in languageGroup.availableOptions">
+                            <md-checkbox ng-click="addNewLanguageOption(option)">
+                                {{option}}
+                            </md-checkbox>
+                        </div>
+                    </div>
+                    <md-tabs md-dynamic-height md-border-bottom>
+                        <md-tab label="{{lang}}" ng-repeat="lang in languageGroup.model">
+                            <div class="row md-padding">
+                                <md-input-container class="md-block">
+                                    <label>{{lang}} Tilte Name</label>
+                                    <textarea rows="1" smart-title languagedetails="{{languageGroup.model}}" ng-model="title[lang]" required></textarea>
+                                </md-input-container>
+                            </div>
+                            <div class="row md-padding ">
+                                <label class="control-label">Knowledge Description
+                                    <star>*</star>
+                                </label>
+                                <div text-angular ng-model="content[lang]" required></div>
+                            </div>
+                        </md-tab>
+                    </md-tabs>
+                </div>
+                <div ng-cloak>
+                    <md-button ng-click="addNewCard()" class="md-raised" md-colors="{background: 'indigo'}" layout-align="center center">Add Knowledge Card
+                    </md-button>
+                    <md-tabs md-dynamic-height md-border-bottom>
+                        <md-tab label="Card {{cardNum}}" ng-repeat="cardNum in knowledgeCard.number">
+                            <div class="md-padding">
+                                <div ng-repeat="lang in languageGroup.model">
+                                    <h4>{{lang}}</h4>
+                                    <div class="row">
+                                        <md-input-container class="md-block">
+                                            <label class="control-label">Knowledge Card Title</label>
+                                            <textarea row="1" smart-card-title languagedetails="{{languageGroup.model}}" carddetails="{{cardNum}}" ng-init="knowledgeCard.title[cardNum][lang] = '' "
+                                                ng-model="knowledgeCard.title[cardNum][lang]" required></textarea>
+                                        </md-input-container>
+                                    </div>
+                                    <div class="row">
+                                        <label class="control-label">Knowledge Card Content
+                                            <star>*</star>
+                                        </label>
+                                        <div text-angular ng-init="knowledgeCard.content[cardNum][lang] = '' " ng-model="knowledgeCard.content[cardNum][lang]" required></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </md-tab>
+                    </md-tabs>
+                </div>
+                <div class="footer">
+                    <md-button class="md-raised md-primary pull-right" type="submit">Submit</md-button>
+                </div>
+            </form>
+        </md-card-content>
+    </md-card>
+</div>

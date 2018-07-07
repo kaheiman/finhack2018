@@ -1,0 +1,666 @@
+<style>
+    .md-datepicker-calendar-pane {
+        z-index: 1151
+    }
+
+    .md-autocomplete-suggestions-container {
+        z-index: 100000 !important;
+        /* any number of choice > 1050*/
+    }
+
+    .md-backdrop.md-select-backdrop {
+        z-index: 1003;
+    }
+
+    .md-select-menu-container {
+        z-index: 9999 !important;
+    }
+
+    .label.ng-binding {
+        color: rgba(0, 0, 0, .54) !important;
+        font-size: 100% !important;
+    }
+
+    .fullscreen-dialog {
+        max-width: 100%;
+        max-height: 100%;
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+    }
+
+    .languageBtn {
+        min-width: 0px;
+    }
+</style>
+<div class="content">
+    <md-card>
+        <md-toolbar class="md-table-toolbar md-default" ng-show="!filter.show">
+            <div class="md-toolbar-tools">
+                <span>Knowledge</span>
+                <div flex></div>
+                <md-button class="md-icon-button" ng-click="filter.show = true">
+                    <md-icon>search</md-icon>
+                </md-button>
+                <md-button class="md-icon-button">
+                    <md-icon>add_box</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-toolbar class="md-table-toolbar md-default" ng-show="filter.show">
+            <div class="md-toolbar-tools">
+                <md-icon class="material-icons">search</md-icon>
+                <input flex="" ng-model="search.$" ng-model-options="filter.options" placeholder="Search">
+                <button class="md-icon-button md-button md-ink-ripple" type="button" ng-click="removeFilter()">
+                    <md-icon class="material-icons">close</md-icon>
+                </button>
+            </div>
+        </md-toolbar>
+        <md-table-container>
+            <table md-table>
+                <thead md-head md-order="query.order">
+                    <tr md-row class="md-row">
+                        <th md-column md-order-by="id">Id</th>
+                        <th md-column md-order-by="order">Practice Number</th>
+                        <th md-column md-order-by="title">Title</th>
+                        <th md-column md-order-by="stream_group">Steam Name</th>
+                        <th md-column>Linked Knowledge Quiz</th>
+                        <th md-column>Quiz Count</th>
+                        <th md-column>Action</th>
+                    </tr>
+                    <tr md-row class="md-row">
+                        <th md-column>
+                            <md-input-container md-no-float>
+                                <input ng-model="search.id" placeholder="All">
+                            </md-input-container>
+                        </th>
+                        <th md-column>
+                            <md-input-container md-no-float>
+                                <input ng-model="search.order" placeholder="All">
+                            </md-input-container>
+                        </th>
+                        <th md-column>
+                            <md-input-container md-no-float>
+                                <input ng-model="search.title" placeholder="All">
+                            </md-input-container>
+                        </th>
+                        <th md-column>
+                            <md-input-container md-no-float>
+                                <input ng-model="search.stream_group" placeholder="All">
+                            </md-input-container>
+                        </th>
+                        <th md-column></th>
+                        <th md-column></th>
+                        <th md-column></th>
+                    </tr>
+                </thead>
+                <tbody md-body>
+                    <tr md-row ng-repeat="item in knowledge | orderBy: '-' + query.order | filter:search | limitTo: query.limit: (query.page - 1) * query.limit ">
+                        <td md-cell>{{item.id}}</td>
+                        <td md-cell style="padding: 0;">{{item.order}}</td>
+                        <td md-cell style="padding: 0;">{{item.title}}</td>
+                        <td md-cell style="padding: 0;">{{item.stream_group}}</td>
+                        <td md-cell style="width: 210px; padding: 0;">
+                            <div ng-repeat="id in item.quiz_list" class="pull-left">
+                                <md-button class="md-raised" style="min-width:0px" ng-click="editKnowledgeQuiz(id)">{{id}}</md-button>
+                            </div>
+                        </td>
+                        <td md-cell>{{item.quiz_list.length || 0}}</td>
+                        <td md-cell style="width: 424px;">
+                            <md-button class="md-raised languageBtn" ng-click="translate(item.id, 'CN')" ng-if="permissions.group.indexOf('CN') != -1 || permissions.superUser == true">CN</md-button>
+                            <md-button class="md-raised languageBtn" ng-click="translate(item.id, 'FR')" ng-if="permissions.group.indexOf('FR') != -1 || permissions.superUser == true">FR</md-button>
+                            <md-button class="md-raised languageBtn" ng-click="translate(item.id, 'JP')" ng-if="permissions.group.indexOf('JP') != -1 || permissions.superUser == true">JP</md-button>
+                            <md-button class="md-raised languageBtn" ng-click="translate(item.id, 'KR')" ng-if="permissions.group.indexOf('KR') != -1 || permissions.superUser == true">KR</md-button>
+                            <md-button class="md-raised languageBtn" ng-click="translate(item.id, 'TC')" ng-if="permissions.group.indexOf('TC') != -1 || permissions.superUser == true">TC</md-button>
+                            <md-button class="md-icon-button" ng-click="editKnowledge(item.id)">
+                                <md-icon>edit</md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button" ng-click="remove(item.id)">
+                                <md-icon>delete</md-icon>
+                            </md-button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </md-table-container>
+        <md-table-pagination md-limit="query.limit" md-limit-options="[15, 20, 25]" md-page="query.page" md-total="{{knowledge.length}}"
+            md-on-paginate="" md-page-select></md-table-pagination>
+    </md-card>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
+                    <div layout-gt-sm="row">
+                        <md-input-container class="md-block" flex-gt-sm>
+                            <label>Enter date</label>
+                            <md-datepicker ng-model="editableItem.publish_date"></md-datepicker>
+                        </md-input-container>
+                        <md-input-container class="md-block" flex-gt-sm>
+                            <div class="row">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <div class="form-group">
+                                        <label class="control-label md-body-1">Upload images into your photo album</label>
+                                        <p>
+                                            <input type="file" class="md-body-1" ngf-select="uploadFiles($files)" ngf-multiple="true" ngf-max-files="5" ngf-pattern="'.png,.jpg'">
+                                        </p>
+                                    </div>
+                                    <div ng-show="Files.length > 0">
+                                        <div ng-repeat="file in Files">
+                                            File:
+                                            <div>
+                                                {{file.name}} {{file.size}}{{file.$error}} {{file.$errorParam}}
+                                            </div>
+                                            <div class="progress">
+                                                <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{file.Progress}}%;">
+                                                    {{file.Progress | number:0}}%
+                                                </div>
+                                            </div>
+                                            <div class="alert alert-info" role="alert" ng-show="file.Progress == 100 && !file.Success">Processing, please wait...</div>
+                                            <div class="alert alert-success" role="alert" ng-show="file.Success">Upload Complete!</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                    <div layout-gt-sm="row">
+                        <md-input-container class="md-block" flex-gt-sm>
+                            <label>Stream Group</label>
+                            <md-select ng-model="editableItem.stream_group">
+                                <md-option value="{{topping.name}}" ng-repeat="topping in streamGroups.availableOptions">{{topping.name}}</md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+
+                    <div layout-gt-sm="row">
+                        <md-input-container class="md-block" flex-gt-sm>
+                            <label>Practice Number </label>
+                            <input md-maxlength="100" required name="name" ng-model="editableItem.practiceNumber" />
+                        </md-input-container>
+                    </div>
+
+
+                    <div layout-gt-sm="row">
+                        <md-radio-group ng-init="data = 'KNOWLEDGE DESCRIPTION'" ng-model="data">
+                            <md-radio-button value="KNOWLEDGE CARD" class="md-primary">Knowledge Card</md-radio-button>
+                            <md-radio-button value="KNOWLEDGE DESCRIPTION"> Knowledge Description </md-radio-button>
+                        </md-radio-group>
+                    </div>
+
+                    <div class="modal-body">
+                        <md-toolbar class="md-primary md-hue-2">
+                            <div class="md-toolbar-tools">
+                                <h2 class="md-flex" layout-align="center center">{{data}}</h2>
+                                <md-button class="md-raised" ng-if="data == 'KNOWLEDGE DESCRIPTION'" ng-click="addNewLanguage(data)"> + New Language </md-button>
+                                <md-button class="md-raised" ng-if="data == 'KNOWLEDGE CARD'" ng-click="addNewLanguage(data)"> + New Card </md-button>
+                            </div>
+                        </md-toolbar>
+
+                        <md-tabs md-dynamic-height md-border-bottom ng-show="data == 'KNOWLEDGE DESCRIPTION'">
+                            <md-tab label="{{obj.languageDisplay}}" ng-repeat="obj in editableItem.knowledgeTranslation">
+                                <br>
+
+                                <div layout="row" ng-if="obj.languageDisplay == 'New language'">
+                                    <md-input-container>
+                                        <label>NEW LANGUAGE</label>
+                                        <md-select ng-model="obj.language" md-selected-text="getSelectedLanguage(obj.language)">
+                                            <md-optgroup label="items">
+                                                <md-option ng-value="item" ng-repeat="item in items">{{item}}</md-option>
+                                            </md-optgroup>
+                                        </md-select>
+                                    </md-input-container>
+                                </div>
+
+
+                                <md-input-container class="md-block" flex-gt-sm>
+                                    <label>Title Name ({{obj.languageDisplay}})</label>
+                                    <input md-maxlength="100" required name="name" ng-model="obj.title" />
+                                </md-input-container>
+                                <label>Content ({{obj.languageDisplay}})</label>
+                                <div text-angular ng-model="obj.description"></div>
+                                <div class="row">
+                                    <div class="col-md-10 col-md-offset-1">
+                                        <div class="form-group">
+                                            <span layout="row" layout-align="center center" ng-if="imagesUrl.length > 0">
+                                                <md-button ng-click="toggleRight(); change(lang)" ng-hide="isOpenRight()" class="md-raised" md-colors="{background: 'indigo'}">
+                                                    Photo Album
+                                                </md-button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </md-tab>
+                            <md-tabs md-dynamic-height md-border-bottom ng-show="data == 'KNOWLEDGE CARD'">
+                                <md-tab label="CARD {{$index}}" ng-repeat="obj in editableItem.knowledgeCard">
+                                    <br>
+                                    <label>Card Language</label>
+                                    <md-button class="md-raised" ng-click="addNewLanguage('KNOWLEDGE CARD TRANSLATION', obj)"> + New Language </md-button>
+                                    <div layout-gt-sm="row">
+                                        <md-radio-group ng-init="dataLanguage = 'EN'" ng-model="dataLanguage">
+                                            <md-radio-button value="EN" class="md-primary">EN</md-radio-button>
+                                            <md-radio-button ng-repeat="item in obj.knowledgeCardTranslation" value="{{$index}}"> {{item.language}}</md-radio-button>
+                                        </md-radio-group>
+                                    </div>
+                                    <br>
+
+                                    <div ng-if="dataLanguage == 'EN'">
+                                        <md-input-container class="md-block" flex-gt-sm>
+                                            <label>Title Name </label>
+                                            <input md-maxlength="100" required name="name" ng-model="obj.title" />
+                                        </md-input-container>
+                                        <label>Content </label>
+                                        <div text-angular ng-model="obj.content"></div>
+                                    </div>
+
+                                    <div ng-if="dataLanguage != 'EN'">
+                                        <div layout="row" ng-if="obj.knowledgeCardTranslation[dataLanguage].languageDisplay == 'New language'">
+                                            <md-input-container>
+                                                <label>NEW LANGUAGE</label>
+                                                <md-select ng-model="obj.knowledgeCardTranslation[dataLanguage].language" md-selected-text="getSelectedLanguage(obj.knowledgeCardTranslation[dataLanguage].language)">
+                                                    <md-optgroup label="items">
+                                                        <md-option ng-value="item" ng-repeat="item in items">{{item}}</md-option>
+                                                    </md-optgroup>
+                                                </md-select>
+                                            </md-input-container>
+                                        </div>
+
+                                        <md-input-container class="md-block" flex-gt-sm>
+                                            <label>Title Name </label>
+                                            <input md-maxlength="100" required name="name" ng-model="obj.knowledgeCardTranslation[dataLanguage].title" />
+                                        </md-input-container>
+                                        <label>Content </label>
+                                        <div text-angular ng-model="obj.knowledgeCardTranslation[dataLanguage].content"></div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-md-10 col-md-offset-1">
+                                            <div class="form-group">
+                                                <span layout="row" layout-align="center center" ng-if="imagesUrl.length > 0">
+                                                    <md-button ng-click="toggleRight(); change(lang)" ng-hide="isOpenRight()" class="md-raised" md-colors="{background: 'indigo'}">
+                                                        Photo Album
+                                                    </md-button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                    </div>
+                    </md-tab>
+
+                    <md-content class="md-padding" layout="column">
+                        <h2 class="md-title">Product Group</h2>
+                        <md-chips ng-model="editableItem.product_group" md-autocomplete-snap md-transform-chip="transformChip($chip)" md-require-match="true">
+                            <md-autocomplete md-selected-item="selectedItem.productGroups" md-search-text="searchText.productGroups" md-items="item in querySearch(searchText.productGroups, 'product')"
+                                md-item-text="item" placeholder="Search for a product group">
+                                <span md-highlight-text="searchText.productGroups">{{item}}</span>
+                            </md-autocomplete>
+                            <md-chip-template>
+                                <span>
+                                    <strong>{{$chip.name}}</strong>
+                                </span>
+                            </md-chip-template>
+                        </md-chips>
+                    </md-content>
+                    <md-content class="md-padding" layout="column">
+                        <h2 class="md-title">Available black list user group</h2>
+                        <md-chips ng-model="editableItem.black_list" md-autocomplete-snap md-transform-chip="transformChip($chip)" md-require-match="true">
+                            <md-autocomplete md-selected-item="selectedItem.userGroupsBlackList" md-search-text="searchText.userGroupsBlackList" md-items="item in querySearch(searchText.userGroupsBlackList, 'user')"
+                                md-item-text="item" placeholder="Search for a user group">
+                                <span md-highlight-text="searchText.userGroupsBlackList">{{item}}</span>
+                            </md-autocomplete>
+                            <md-chip-template>
+                                <span>
+                                    <strong>{{$chip.name}}</strong>
+                                </span>
+                            </md-chip-template>
+                        </md-chips>
+                    </md-content>
+                    <md-content class="md-padding" layout="column">
+                        <h2 class="md-title">Available white list user group</h2>
+                        <md-chips ng-model="editableItem.white_list" md-autocomplete-snap md-transform-chip="transformChip($chip)" md-require-match="true">
+                            <md-autocomplete md-selected-item="selectedItem.userGroupsWhiteList" md-search-text="searchText.userGroupsWhiteList" md-items="item in querySearch(searchText.userGroupsWhiteList, 'user')"
+                                md-item-text="item" placeholder="Search for a user group">
+                                <span md-highlight-text="searchText.userGroupsWhiteList">{{item}}</span>
+                            </md-autocomplete>
+                            <md-chip-template>
+                                <span>
+                                    <strong>{{$chip.name}}</strong>
+                                </span>
+                            </md-chip-template>
+                        </md-chips>
+                    </md-content>
+
+                    <div class="modal-footer">
+                        <button ng-if="!activateUpdate" type="button" class="btn btn-default btn-simple" data-dismiss="modal">Close</button>
+                        <button type="button" ng-if="!activateUpdate" class="btn btn-success btn-fill" ng-click="clickable('EDIT-SAVE', editableItem.id)">Save changes
+                        </button>
+                        <md-content md-theme="docs-dark" layout-padding ng-if="activateUpdate">
+                            <div layout="row" layout-sm="column" layout-align="space-around">
+                                <md-progress-circular md-diameter="35"></md-progress-circular>
+                            </div>
+                        </md-content>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end row -->
+    <script type="text/ng-template" id="edit.knowledgeQuiz.html">
+        <md-dialog aria-label="Mango (Fruit)" flex="70">
+            <form ng-cloak>
+                <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        <h2>Edit Knowledge Quiz</h2>
+                        <span flex></span>
+                    </div>
+                </md-toolbar>
+                <md-dialog-content>
+                    <div class="md-dialog-content" class="md-padding" layout-xs="column" layout="row">
+                        <div flex-xs flex-gt-xs="40" layout="column">
+                            <md-card>
+                                <md-card-title>
+                                    <md-card-title-text>
+                                        <span class="md-headline">Quiz Question</span>
+                                    </md-card-title-text>
+                                </md-card-title>
+                                <md-card-content>
+                                    <md-input-container class="md-block" flex-gt-sm>
+                                        <label>Quiz Question</label>
+                                        <input ng-model="knowledgeQuiz.question">
+                                    </md-input-container>
+                                    <h4>Knowledge Quiz Translation</h4>
+                                    <md-input-container md-no-float class="md-block" ng-repeat="option in knowledgeQuiz.translations_quiz">
+                                        <label>{{option.language}}</label>
+                                        <input ng-model="option.question">
+                                    </md-input-container>
+                                </md-card-content>
+                            </md-card>
+                        </div>
+                        <div flex-xs flex-gt-xs="60" layout="column">
+                            <md-card>
+                                <md-card-title>
+                                    <md-card-title-text>
+                                        <span class="md-headline">Quiz Answer</span>
+                                    </md-card-title-text>
+                                </md-card-title>
+                                <md-card-content>
+                                    <md-tabs md-dynamic-height md-border-bottom>
+                                        <md-tab label="{{questionType[$index]}}" ng-repeat="answer in knowledgeQuiz.answers">
+                                            <md-content class="md-padding">
+                                                <div class="row">
+                                                    <div class="col-md-10 col-md-offset-1">
+                                                        <md-checkbox ng-model="answer.correct">
+                                                            <b>Correct</b>
+                                                        </md-checkbox>
+                                                        <br>
+                                                        <br>
+                                                        <label class="control-label">Knowledge Quiz Answer</label>
+                                                        <md-input-container md-no-float class="md-block">
+                                                            <input ng-model="answer.answer" placeholder="English Answer">
+                                                        </md-input-container>
+                                                        <label class="control-label">Knowledge Quiz Answer Translation</label>
+                                                        <br>
+                                                        <br>
+                                                        <md-input-container md-no-float class="md-block" ng-repeat="option in answer.translations_answer">
+                                                            <label>{{option.language}}</label>
+                                                            <input ng-model="option.answer">
+                                                        </md-input-container>
+                                                    </div>
+                                                </div>
+                                            </md-content>
+                                        </md-tab>
+                                    </md-tabs>
+                                </md-card-content>
+                            </md-card>
+                        </div>
+                    </div>
+                </md-dialog-content>
+                <md-dialog-actions layout="row">
+                    <span flex></span>
+                    <md-button class="md-raised " ng-click="closeDialog()">Cancel</md-button>
+                    <md-button class="md-raised md-primary" ng-click="saveEdit()">Save Change</md-button>
+                </md-dialog-actions>
+            </form>
+        </md-dialog>
+    </script>
+    <script type="text/ng-template" id="edit.knowledge.html">
+        <md-dialog aria-label="Mango (Fruit)" class="fullscreen-dialog">
+            <form ng-cloak style="height:100%;">
+                <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        <h2>Edit Knowledge</h2>
+                        <span flex></span>
+                    </div>
+                </md-toolbar>
+                <md-dialog-content style="height:100%;">
+                    <div class="md-dialog-content" class="md-padding" layout-xs="column" layout="row">
+                        <div flex-xs flex-gt-xs="20" layout="column">
+                            <md-input-container class="md-block">
+                                <label>Order</label>
+                                <input required ng-model="knowledge.order" name="order">
+                                <div ng-messages="knowledgeForm.order.$error">
+                                    <div ng-message="required">This is required.</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block">
+                                <label>Stream group</label>
+                                <md-select required ng-model="knowledge.stream_group" name="streamGroups">
+                                    <md-optgroup label="Stream group">
+                                        <md-option ng-value="sg.id" ng-repeat="sg in streamGroups">{{sg.name}}</md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                            <md-input-container class="md-block">
+                                <label>Product Group</label>
+                                <md-select required ng-model="knowledge.product_group" multiple name="productGroups">
+                                    <md-optgroup label="Product Group">
+                                        <md-option ng-value="pg.id" ng-repeat="pg in productGroups">{{pg.name}}</md-option>
+                                    </md-optgroup>
+                                </md-select>
+                                <div ng-messages="lcForm.productGroups.$error">
+                                    <div ng-message="required">This is required.</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container class="md-block">
+                                <label>Available black list user group</label>
+                                <md-select ng-model="knowledge.black_list_user_group" multiple name="black">
+                                    <md-optgroup label="User Group">
+                                        <md-option ng-value="ug.id" ng-repeat="ug in userGroups">{{ug.name}}</md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                            <md-input-container class="md-block">
+                                <label>Available white list user group</label>
+                                <md-select ng-model="knowledge.white_list_user_group" multiple name="white">
+                                    <md-optgroup label="User Group">
+                                        <md-option ng-value="ug.id" ng-repeat="ug in userGroups">{{ug.name}}</md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                            <md-input-container class="md-block">
+                                <label>Publish Date</label>
+                                <md-datepicker required ng-model="knowledge.publish_date" name="publishDate"></md-datepicker>
+                                <div ng-messages="lcForm.publishDate.$error">
+                                    <div ng-message="required">This is required.</div>
+                                </div>
+                            </md-input-container>
+
+                        </div>
+                        <div flex-xs flex-gt-xs="40" layout="column">
+                            <h3>Knowledge Description
+                                <md-menu>
+                                    <md-button class="md-raised" ng-click="$mdMenu.open($event)">Add Language</md-button>
+                                    <md-menu-content width="2">
+                                        <md-menu-item ng-repeat="lang in descLang">
+                                            <md-button ng-click="addLanguage(lang)">
+                                                {{lang}}
+                                            </md-button>
+                                        </md-menu-item>
+                                    </md-menu-content>
+                                </md-menu>
+                            </h3>
+                            <md-tabs md-dynamic-height md-border-bottom>
+                                <md-tab ng-repeat="k in knowledge_translation" label="{{k.language}}">
+                                    <md-content class="md-padding">
+                                        <h1 class="md-display-2">
+                                            <md-input-container class="md-block md-headline" flex-gt-sm>
+                                                <label>Knowledge Title</label>
+                                                <input required ng-model="k.title" name="k.title">
+                                                <div ng-messages="lcForm.title.$error">
+                                                    <div ng-message="required">This is required.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </h1>
+                                        <p>
+                                            <div text-angular ng-model="k.description"></div>
+                                        </p>
+                                    </md-content>
+                                </md-tab>
+                            </md-tabs>
+                        </div>
+                        <div flex-xs flex-gt-xs="40" layout="column">
+                            <h3>Knowledge Card
+                                <md-button class="md-raised" ng-click="addCard()">Add Card</md-button>
+                            </h3>
+                            <md-tabs md-dynamic-height md-border-bottom>
+                                <md-tab ng-repeat="c in card" label="Card {{$index}}">
+                                    <md-content class="md-padding">
+                                        <md-menu>
+                                            <md-button class="md-raised" ng-click="$mdMenu.open($event)">Add Card Language</md-button>
+                                            <md-menu-content width="2">
+                                                <md-menu-item ng-repeat="lang in cardLang">
+                                                    <md-button ng-click="addCardLanguage(lang, $parent.$index)">
+                                                        {{lang}}
+                                                    </md-button>
+                                                </md-menu-item>
+                                            </md-menu-content>
+                                        </md-menu>
+                                        <md-tabs md-dynamic-height md-border-bottom>
+                                            <md-tab ng-repeat="cc in c.cardContent" label="{{cc.language}}">
+                                                <md-content class="md-padding">
+                                                    <h1 class="md-display-2">
+                                                        <md-input-container class="md-block md-headline" flex-gt-sm>
+                                                            <label>Knowledge Card Title</label>
+                                                            <input required ng-model="cc.title" name="cc.title">
+                                                            <div ng-messages="lcForm.title.$error">
+                                                                <div ng-message="required">This is required.</div>
+                                                            </div>
+                                                        </md-input-container>
+                                                    </h1>
+                                                    <p>
+                                                        <div text-angular ng-model="cc.content"></div>
+                                                    </p>
+                                                </md-content>
+                                                <md-tab>
+                                        </md-tabs>
+                                    </md-content>
+                                    </md-tab>
+                            </md-tabs>
+                        </div>
+                    </div>
+                </md-dialog-content>
+                <md-dialog-actions layout="row">
+                    <span flex></span>
+                    <md-button class="md-raised " ng-click="closeDialog()"> Cancel </md-button>
+                    <md-button class="md-raised md-primary" ng-click="saveEdit()"> Save</md-button>
+                </md-dialog-actions>
+            </form>
+        </md-dialog>
+    </script>
+    <script type="text/ng-template" id="translate.knowledge.html">
+        <md-dialog aria-label="Mango (Fruit)" class="fullscreen-dialog">
+            <form ng-cloak style="height:100%;">
+                <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        <h2>Translate Knowledge - {{language}}</h2>
+                    </div>
+                </md-toolbar>
+                <md-dialog-content style="height:100%;">
+                    <md-tabs md-dynamic-height md-border-bottom>
+                        <md-tab label="Description">
+                            <md-content>
+                                <div class="md-dialog-content" class="md-padding" layout-xs="column" layout="row">
+                                    <div flex-xs flex-gt-xs="50" layout="column">
+                                        <h1 class="md-display-2">
+                                            <md-input-container class="md-block md-headline" flex-gt-sm>
+                                                <label>Knowledge Title</label>
+                                                <input required ng-model="knowledge.title" name="title" ng-disabled="true">
+                                                <div ng-messages="kForm.title.$error">
+                                                    <div ng-message="required">This is required.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </h1>
+                                        <p>
+                                            <div text-angular ng-model="knowledge.description_html" ta-disabled="true"></div>
+                                        </p>
+                                    </div>
+                                    <div flex-xs flex-gt-xs="50" layout="column">
+                                        <h1 class="md-display-2">
+                                            <md-input-container class="md-block md-headline" flex-gt-sm>
+                                                <label>Knowledge Title</label>
+                                                <input required ng-model="translate.title" name="translate.title">
+                                                <div ng-messages="lcForm.title.$error">
+                                                    <div ng-message="required">This is required.</div>
+                                                </div>
+                                            </md-input-container>
+                                        </h1>
+                                        <p>
+                                            <div text-angular ng-model="translate.description"></div>
+                                        </p>
+                                    </div>
+                                </div>
+                            </md-content>
+                        </md-tab>
+                        <md-tab label="Card">
+                            <md-content class="md-padding">
+                                <md-tabs md-dynamic-height md-border-bottom>
+                                    <md-tab ng-repeat="c in card" label="Card {{$index}}">
+                                        <div layout-xs="column" layout="row">
+                                            <div flex-xs flex-gt-xs="50" layout="column">
+                                                <h1 class="md-display-2">
+                                                    <md-input-container class="md-block md-headline" flex-gt-sm>
+                                                        <label>Knowledge Title</label>
+                                                        <input required ng-model="c.title" name="c.title" ng-disabled="true">
+                                                        <div ng-messages="lcForm.c.title.$error">
+                                                            <div ng-message="required">This is required.</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                </h1>
+                                                <p>
+                                                    <div text-angular ng-model="c.content" ta-disabled="true"></div>
+                                                </p>
+                                            </div>
+                                            <div flex-xs flex-gt-xs="50" layout="column">
+                                                <h1 class="md-display-2">
+                                                    <md-input-container class="md-block md-headline" flex-gt-sm>
+                                                        <label>Knowledge Title</label>
+                                                        <input required ng-model="c.cardContent[0].title" name="c.cardContent[0].title">
+                                                        <div ng-messages="lcForm.c.cardContent[0].title.$error">
+                                                            <div ng-message="required">This is required.</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                </h1>
+                                                <p>
+                                                    <div text-angular ng-model="c.cardContent[0].content"></div>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </md-tab>
+                                    <md-tabs>
+                            </md-content>
+                        </md-tab>
+                        </md-tabs>
+                </md-dialog-content>
+                <md-dialog-actions layout="row">
+                    <span flex></span>
+                    <md-button class="md-raised" ng-click="closeDialog()"> Cancel </md-button>
+                    <md-button class="md-raised md-primary" ng-click="saveTranslate()"> Translate</md-button>
+                </md-dialog-actions>
+            </form>
+        </md-dialog>
+    </script>

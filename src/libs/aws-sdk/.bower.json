@@ -1,0 +1,33 @@
+{
+  "name": "aws-sdk",
+  "ignore": [
+    "apis",
+    "doc-src",
+    "dist-tools",
+    "eslint-rules",
+    "features",
+    "lib",
+    "scripts",
+    "tasks",
+    "test",
+    "Gemfile*",
+    "configuration*",
+    "Rakefile",
+    "package.json",
+    "testem.json",
+    ".*",
+    "index.js"
+  ],
+  "main": "dist/aws-sdk.js",
+  "homepage": "https://github.com/aws/aws-sdk-js",
+  "version": "2.222.1",
+  "_release": "2.222.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v2.222.1",
+    "commit": "7ada7a0ce97286d2adda5457f1013e33a1ec5b1c"
+  },
+  "_source": "https://github.com/aws/aws-sdk-js.git",
+  "_target": "^2.219.1",
+  "_originalSource": "aws-sdk"
+}

@@ -1,0 +1,53 @@
+{
+  "name": "cms-spa",
+  "version": "0.1.0",
+  "description": "ThinkItTwice CMS",
+  "main": "gulpfile.js",
+  "scripts": {
+    "start": "gulp serve",
+    "postinstall": "",
+    "update-deps": "npm update",
+    "postupdate-deps": "",
+    "prestart": "npm install",
+    "pretest": "npm install",
+    "test": "karma start karma.conf.js",
+    "test-single-run": "karma start karma.conf.js --single-run --browsers ChromeHeadlessNoSandbox",
+    "preupdate-webdriver": "npm install",
+    "update-webdriver": "webdriver-manager update",
+    "preprotractor": "npm run update-webdriver",
+    "protractor": "protractor e2e-tests/protractor.conf.js",
+    "update-index-async": "node -e \"var fs=require('fs'),indexFile='app/index-async.html',loaderFile='app/bower_components/angular-loader/angular-loader.min.js',loaderText=fs.readFileSync(loaderFile,'utf-8').split(/sourceMappingURL=angular-loader.min.js.map/).join('sourceMappingURL=bower_components/angular-loader/angular-loader.min.js.map'),indexText=fs.readFileSync(indexFile,'utf-8').split(/\\/\\/@@NG_LOADER_START@@[\\s\\S]*\\/\\/@@NG_LOADER_END@@/).join('//@@NG_LOADER_START@@\\n'+loaderText+'    //@@NG_LOADER_END@@');fs.writeFileSync(indexFile,indexText);\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/thinkittwice/cms-spa.git"
+  },
+  "keywords": [
+    "thinkittwice",
+    "cms",
+    "spa",
+    "angularjs"
+  ],
+  "author": "Marcus Man",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/thinkittwice/cms-spa#readme",
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-angular": "^3.3.0",
+    "eslint-plugin-import": "^2.9.0",
+    "http-server": "^0.11.1",
+    "jasmine-core": "^3.1.0",
+    "karma": "^2.0.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-firefox-launcher": "^1.1.0",
+    "karma-jasmine": "^1.1.1",
+    "karma-junit-reporter": "^1.2.0",
+    "karma-verbose-reporter": "0.0.6",
+    "protractor": "^5.3.0"
+  },
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-serve": "^1.4.0"
+  }
+}
